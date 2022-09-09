@@ -1,0 +1,23 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/app",
+    "baseUrl": "./"
+  },
+  "files": [
+    "main.ts",
+    "polyfills.ts",
+    "app/enums/gender.enum.ts",
+    "app/enums/user-status.enum.ts",
+    "app/enums/users.enum.ts",
+    "app/enums/role.enum.ts",
+    "app/enums/day-or-boarding.enum.ts",
+    "app/enums/joining-secondary-or-continuing.enum.ts",
+    "app/enums/school-grade.enum.ts"
+  ],
+  "include": [
+    "**/*.d.ts",
+    "/src/app/enums/*.ts",
+    "src/**/*.d.ts"
+  ]
+}
