@@ -7,6 +7,8 @@ import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import {ApplicationComponent} from '../application/application.component';
 import {RegisterComponent} from '../components/register/register.component';
+import {ProfileComponent} from '../components/profile/profile.component';
+import {AboutComponent} from '../components/about/about.component';
 
 const routes: Routes = [{
   path: '',
@@ -19,6 +21,18 @@ const routes: Routes = [{
     {
       path: 'iot-dashboard',
       component: ECommerceComponent,
+    },
+    {
+      path: 'application',
+      component: ApplicationComponent,
+    },
+    {
+      path: 'register',
+      component: RegisterComponent,
+    },
+    {
+      path: 'profile',
+      component: ProfileComponent,
     },
     {
       path: 'layout',
@@ -74,14 +88,6 @@ const routes: Routes = [{
       path: '',
       redirectTo: 'dashboard',
       pathMatch: 'full',
-    },
-    {
-      path: 'application',
-      component: ApplicationComponent,
-    },
-    {
-      path: 'register',
-      component: RegisterComponent,
     },
     {
       path: '**',

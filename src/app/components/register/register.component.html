@@ -28,15 +28,15 @@
           </div>
           <div class="form-group">
             <label for="middleName" class="label">Middle Name</label>
-            <input type="text" nbInput fullWidth id="middleName" placeholder="Middle Name">
+            <input type="text" nbInput fullWidth formControlName="middleName" id="middleName" placeholder="Middle Name">
           </div>
           <div class="form-group">
             <label for="lastName" class="label">Last Name</label>
-            <input type="text" nbInput fullWidth id="lastName" placeholder="Last Name">
+            <input type="text" nbInput fullWidth formControlName="lastName" id="lastName" placeholder="Last Name">
           </div>
           <div class="form-group">
             <label for="email" class="label">Email</label>
-            <input type="email" nbInput fullWidth id="email" placeholder="Email">
+            <input type="email" nbInput fullWidth formControlName="email" id="email" placeholder="Email">
           </div>
           <div class="form-group">
             <label class="label" for="password">Password</label>
@@ -44,7 +44,6 @@
                    type="password"
                    id="password"
                    name="password"
-                   placeholder="Password"
                    fullWidth>
             <ng-container *ngIf="registerFormControl.password.invalid && registerFormControl.password.touched">
               <p class="caption status-danger" *ngIf="registerFormControl.password.errors?.required">
@@ -65,7 +64,6 @@
                    type="password"
                    id="confirmPassword"
                    name="confirmPassword"
-                   placeholder="Confirm Password"
                    fullWidth>
             <ng-container *ngIf="registerFormControl.password.invalid && registerFormControl.password.touched">
               <p class="caption status-danger" *ngIf="registerFormControl.password.errors?.required">
@@ -87,40 +85,77 @@
 <!--                                Passwords does not match-->
 <!--                            </span>-->
           </div>
+          <div class="form-group">
+            <label for="county" class="label">User Type</label>
+            <nb-select id="userType" formControlName="userType">
+              <nb-option fullWidth *ngFor="let user of userType" [value]="user.key">
+                <ng-container *ngIf="user.key != 'ADMIN' || 'USER'">
+                  {{ user.value | titlecase }}
+                </ng-container>
 
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="form-group">
+            <label for="photo" class="label">Photo </label>
+            <input type="file" nbInput fullWidth formControlName="photo" id="photo"  (change)="selectFile($event, 'photo')">
+          </div>
 <!--          Use email instead-->
-<!--          <div class="form-group">-->
-<!--            <label for="userName" class="label">User Name</label>-->
-<!--            <input type="text" nbInput fullWidth id="userName" placeholder="User Name">-->
-<!--          </div>-->
+          <div class="form-group">
+            <label for="userName" class="label">User Name</label>
+            <input type="text" formControlName="username" nbInput fullWidth id="userName" placeholder="User Name">
+          </div>
           <div class="form-group">
             <label class="label">Gender</label>
             <div>
-              <nb-radio-group class="col-6">
-                <nb-radio>Male</nb-radio>
-                <nb-radio>Female</nb-radio>
+              <nb-radio-group id="gender" fullWidth formControlName="gender" *ngFor="let value of gender">
+                <nb-radio value="{{value.key}}">{{value.value}}</nb-radio>
               </nb-radio-group>
             </div>
           </div>
           <div class="form-group">
             <label for="telephone" class="label">Telephone Number</label>
-            <input type="text" nbInput fullWidth id="telephone" placeholder="+2547...">
+            <input type="text" nbInput fullWidth formControlName="telephone" id="telephone" placeholder="+2547...">
           </div>
           <div class="form-group">
             <input nbInput
                    formControlName="dateOfBirth"
                    placeholder="Date of Birth"
+                   fullWidth
                    [nbDatepicker]="formPicker">
             <nb-datepicker #formPicker></nb-datepicker>
           </div>
-          <div class="form-group">
-            <label for="address" class="label">Address</label>
-            <input type="text" nbInput fullWidth id="address" >
-          </div>
-          <div class="form-group">
-            <label for="postalCode" class="label">Postal Code</label>
-            <input type="text" nbInput fullWidth id="postalCode">
-          </div>
+          <form formGroupName="addressForm">
+            <div class="form-group">
+              <label for="address" class="label">Address</label>
+              <textarea formControlName="address1" rows="5" nbInput fullWidth id="address" shape="semi-round"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="country" class="label">Country</label>
+              <nb-select fullWidth id="country" formControlName="country" [(ngModel)]="selectedCountry">
+                <nb-option  *ngFor="let country of countries" [value]="country.id">
+                  {{country.name}}
+                </nb-option>
+              </nb-select>
+            </div>
+            <div class="form-group" *ngIf="selectedCountry === 110">
+              <label for="county" class="label">County</label>
+              <nb-select id="county" formControlName="county">
+                <nb-option fullWidth *ngFor="let county of counties" [value]="county.id">
+                  {{county.name}}
+                </nb-option>
+              </nb-select>
+            </div>
+            <div class="form-group">
+              <label for="postalCode" class="label">Postal Code</label>
+              <textarea formControlName="postalCode" rows="3"  shape="semi-round" nbInput fullWidth id="postalCode"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="zipCode" class="label">Zip Code</label>
+              <input type="text" nbInput fullWidth id="zipCode">
+            </div>
+          </form>
+
 
 
           <div class="form-group">
@@ -128,6 +163,7 @@
           </div>
           <button type="submit" nbButton status="danger">Submit</button>
         </form>
+        <button class="btn-dark" (click)="populateWithDummy()" >Populate</button>
       </nb-card-body>
     </nb-card>
   </div>

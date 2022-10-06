@@ -1,24 +1,35 @@
 import {Component, OnInit} from '@angular/core';
-import {NbAuthToken, NbTokenLocalStorage} from '@nebular/auth';
-import {NbTokenStorage} from '@nebular/auth/services/token/token-storage';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {ApplicationService} from '../../services/application-service.service';
 
 @Component({
-  selector: 'ngx-login',
+  selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
 
-  constructor() {
+  loginForm: FormGroup;
+  submitted: boolean = false;
+
+  constructor(private fb: FormBuilder, private applicationService: ApplicationService) {
   }
 
   ngOnInit(): void {
-
-
-    // this.localStorage.set()
-    //NbAuth
-   // console.log('Item: ', this.localStorage.get());
+    this.loginForm = this.fb.group({
+      email: [''],
+      password: [''],
+    });
 
   }
 
+  login(): void {
+    console.log('Logging in...');
+    this.submitted = true;
+    this.applicationService.login(this.loginForm.get('email').value, this.loginForm.get('password').value);
+  }
+
+  get loginFormControls() {
+    return this.loginForm.controls;
+  }
 }

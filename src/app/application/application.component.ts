@@ -47,7 +47,7 @@ export class ApplicationComponent implements OnInit {
   familyStatusValues: string[] = Object.values(FamilyStatus);
   schoolStatusKeys: string[] = Object.keys(SchoolStatus);
   schoolStatusValues: string[] = Object.values(SchoolStatus);
-  counties: County[] = [];
+  counties: County[] = ApplicationConstants.COUNTIES;
   otherDocuments: FileList;
   studentDocuments: File[] = [];
   progressInfos = [];
@@ -62,7 +62,7 @@ export class ApplicationComponent implements OnInit {
   goToHome() {
     this.menuService.navigateHome();
     const user: User = new User();
-    user.userName = 'Admin';
+    user.username = 'Admin';
   }
 
 // User will be logged in student
@@ -336,12 +336,6 @@ export class ApplicationComponent implements OnInit {
   }
 
   initCounties(): void {
-    for (const countElement of ApplicationConstants.COUNTIES) {
-      const c: County = new County();
-      c.id = countElement.key;
-      c.name = countElement.value;
-      this.counties.push(c);
-    }
   }
 
   populateWithDummy(): void {
