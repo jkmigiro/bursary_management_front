@@ -1,0 +1,35 @@
+<nb-card size="medium">
+  <nb-card-body>
+    <div>
+      <div class="h6">
+        Name
+      </div>
+      <p>{{ user.firstName + user.middleName + user.lastName}}</p>
+      <br>
+      <div class="h6">
+        Email
+      </div>
+      <p>{{ user.email}}</p>
+      <div class="h6">
+        Telephone
+      </div>
+      <p>{{ user.telephone}}</p>
+      <div class="h6">
+        Date Of Birth
+      </div>
+      <p>{{ user.dateOfBirth}}</p>
+      <div class="h6">
+        Gender
+      </div>
+      <p>{{ user.gender}}</p>
+    </div>
+<!--    <div class="progress-info" *ngFor="let item of progressInfoData">-->
+<!--      <div class="subtitle">{{ item.title }}</div>-->
+<!--      <div class="h3">{{ item.value | ngxNumberWithCommas }}</div>-->
+<!--      <nb-progress-bar [value]="item.activeProgress"></nb-progress-bar>-->
+<!--      <div class="caption description">-->
+<!--        <bdi>{{ item.description }}</bdi>-->
+<!--      </div>-->
+<!--    </div>-->
+  </nb-card-body>
+</nb-card>
