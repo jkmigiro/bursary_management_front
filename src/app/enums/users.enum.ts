@@ -6,4 +6,5 @@ export enum Users {
   WARD_ADMINISTRATOR= 'Ward Administrator',
   USER= 'User',
   SCHOOL= 'School',
+  PRINCIPAL = 'Principal',
 }

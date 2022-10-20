@@ -250,20 +250,20 @@ export class ApplicationComponent implements OnInit {
     joiningSecondary.totalFees = jsd.get('totalFees').value;
     joiningSecondary.benefittedFromFund = jsd.get('benefittedFromFund').value;
     joiningSecondary.benefittedFromFundAmount = jsd.get('benefittedFromFundAmount').value;
-    joiningSecondary.dayOrBorder = jsd.get('dayOrBoarder').value;
+    joiningSecondary.dayOrBoarder = jsd.get('dayOrBoarder').value;
     joiningSecondary.outstandingBalance = jsd.get('outstandingBalance').value;
     joiningSecondary.joiningSecondaryOrContinuing = JoiningSecondaryOrContinuing[this.isJoiningSecondaryOrContinuing];
     joiningSecondary.feesStructure = jsd.get('feesStructure').value;
     console.log('joiningSecondary= ', joiningSecondary);
 
-    wardAdministrator.familyStatusComment = wardCl.get('familyStatusComment').value;
-    wardAdministrator.name = wardCl.get('name').value;
+   // wardAdministrator.familyStatusComment = wardCl.get('familyStatusComment').value;
+   // wardAdministrator.name = wardCl.get('name').value;
     console.log('Ward Administrator= ', wardAdministrator);
 
     schoolVerification.academicYear = svd.get('academicYear').value;
     schoolVerification.position = svd.get('position').value;
     schoolVerification.grade =  svd.get('schoolGrade').value;
-    schoolVerification.principalComment = svd.get('principalComment').value;
+    // schoolVerification.principalComment = svd.get('principalComment').value;
     console.log('schoolVerification= ', schoolVerification);
     // this.uploadFiles();
     console.log('isJoiningSecondaryOrContinuing= ', this.isJoiningSecondaryOrContinuing);

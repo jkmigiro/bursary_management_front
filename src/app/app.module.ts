@@ -38,6 +38,21 @@ import { FooterComponent } from './components/footer/footer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ApplyingComponent } from './components/applying/applying.component';
 import { GuidelinesComponent } from './components/guidelines/guidelines.component';
+import { MyApplicationsComponent } from './components/my-applications/my-applications.component';
+import { StatusComponent } from './components/status/status.component';
+import {Ng2SmartTableModule} from 'ng2-smart-table';
+import { ManagerComponent } from './components/my-applications/manager/manager.component';
+import { OfficialsComponent } from './components/my-applications/officials/officials.component';
+import { AdminComponent } from './components/my-applications/admin/admin.component';
+import {MatTableModule} from '@angular/material/table';
+import {MatSliderModule} from '@angular/material/slider';
+import {MatIconModule} from '@angular/material/icon';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatButtonModule} from '@angular/material/button';
+import { AppDetailsStudentComponent } from './components/application-details/app-details-student/app-details-student.component';
+import { AppDetailsAdminComponent } from './components/application-details/app-details-admin/app-details-admin.component';
+import { AppDetailsManagerComponent } from './components/application-details/app-details-manager/app-details-manager.component';
+import { AppDetailsComponent } from './components/application-details/app-details/app-details.component';
 
 @NgModule({
   declarations: [AppComponent,
@@ -51,7 +66,16 @@ import { GuidelinesComponent } from './components/guidelines/guidelines.componen
     NavComponent,
     FooterComponent,
     ApplyingComponent,
-    GuidelinesComponent],
+    GuidelinesComponent,
+    MyApplicationsComponent,
+    StatusComponent,
+    ManagerComponent,
+    OfficialsComponent,
+    AdminComponent,
+    AppDetailsStudentComponent,
+    AppDetailsAdminComponent,
+    AppDetailsManagerComponent,
+    AppDetailsComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -82,6 +106,12 @@ import { GuidelinesComponent } from './components/guidelines/guidelines.componen
     MatRadioModule,
     MatSelectModule,
     NgbModule,
+    Ng2SmartTableModule,
+    MatTableModule,
+    MatSliderModule,
+    MatIconModule,
+    MatDividerModule,
+    MatButtonModule,
   ],
   providers: [{provide: NbTokenStorage, useClass: NbTokenLocalStorage}],
   bootstrap:

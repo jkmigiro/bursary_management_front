@@ -1,27 +1,36 @@
 <nb-card size="medium">
   <nb-card-body>
     <div>
-      <div class="h6">
-        Name
+      <div>
+        <h6 class="text-info">Name</h6>
+        <div>      <p>{{ user.firstName+ ' ' + user.middleName+ ' ' + user.lastName}}</p>
+
+        </div>
       </div>
-      <p>{{ user.firstName + user.middleName + user.lastName}}</p>
-      <br>
-      <div class="h6">
-        Email
+      <div>
+        <h6 class="text-info">Email</h6>
+        <div> <p>{{ user.email}}</p>
+        </div>
       </div>
-      <p>{{ user.email}}</p>
-      <div class="h6">
-        Telephone
+      <div>
+        <h6 class="text-info">Telephone</h6>
+        <div> <p>{{ user.telephone}}</p>
+        </div>
       </div>
-      <p>{{ user.telephone}}</p>
-      <div class="h6">
-        Date Of Birth
+      <div>
+        <h6 class="text-info">Date Of Birth</h6>
+        <div><p>{{ user.dateOfBirth}}</p></div>
       </div>
-      <p>{{ user.dateOfBirth}}</p>
-      <div class="h6">
-        Gender
+
+      <div>
+        <h6 class="text-info">Gender</h6>
+        <div><p>{{ user.dateOfBirth}}</p></div>
       </div>
-      <p>{{ user.gender}}</p>
+
+      <div>
+        <h6 class="text-info">>User Type</h6>
+        <div><p>{{ user.userType}}</p></div>
+      </div>
     </div>
 <!--    <div class="progress-info" *ngFor="let item of progressInfoData">-->
 <!--      <div class="subtitle">{{ item.title }}</div>-->

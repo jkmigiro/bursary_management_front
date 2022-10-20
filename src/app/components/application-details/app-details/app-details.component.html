@@ -1,0 +1,133 @@
+<div class="item text-heading">
+  <div class="color bg-heading"></div>
+  <div>
+    <h5 class="text-heading">Heading Text</h5>
+    Far far away, behind the your awesomeness.
+    {{application.id}}
+  </div>
+</div>
+
+<form [formGroup]="updateApplicationForm" (ngSubmit)="onUpdateApplication()">
+  <div class="form-group">
+    <label for="applicant" class="label">Applicant</label>
+    <input type="text" nbInput fullWidth [disabled]="true" id="applicant" [value]="application.applicant.email" placeholder="Applicant">
+  </div>
+  <div class="form-group">
+    <label for="applicant" class="label">Application Date</label>
+    <input type="text" nbInput fullWidth [disabled]="true" id="applicationDate" [value]="application.applicationDate" placeholder="Date">
+  </div>
+  <div class="form-group">
+    <label for="applicationStatus" class="label">Application Status</label>
+    <input type="text" [ngClass]="getClassOfApplicationStatus(application.applicationStatus)"  nbInput fullWidth [disabled]="true" id="applicationStatus" [value]="application.applicationStatus" placeholder="Pending, Approved or Rejected">
+  </div>
+
+  <ng-container *ngIf="application.applicationStatus != pendingStatus">
+    <div class="form-group">
+      <label for="reviewedBy" class="label">Reviewed By</label>
+      <input type="text" nbInput fullWidth [disabled]="true" id="reviewedBy" [value]="application.reviewedBy.email">
+    </div>
+
+    <div class="form-group">
+      <label for="reviewedDate" class="label">Reviewed Date</label>
+      <input type="text" nbInput fullWidth [disabled]="true" id="reviewedDate" [value]="application.reviewedDate">
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="studentsOnly">
+    <div>
+      <label for="joiningSecondary" class="label">Are you Joining Secondary or Continuing</label>
+      <mat-radio-group
+        aria-labelledby="joiningSecondary"
+        id="joiningSecondary"
+        [(ngModel)]="isJoiningSecondaryOrContinuing">
+        <mat-radio-button class="example-radio-button" *ngFor="let val of JOINING_OR_CONTINUING"  [value]="val.key">
+          {{val.value}}
+        </mat-radio-button>
+      </mat-radio-group>
+      <div>Your favorite season is: {{isJoiningSecondaryOrContinuing}}</div>
+    </div>
+  </ng-container>
+
+
+  <ng-container *ngIf="!studentsOnly || (studentsOnly && (isJoiningSecondaryOrContinuing == 'Joining Secondary' || 'Continuing'))">
+    <form formGroupName="joiningSecondaryForm">
+      <div class="form-group">
+        <label for="totalFees" class="label">Total Fees (per year)</label>
+        <input type="number" [disabled]="!studentsOnly" nbInput fullWidth formControlName="totalFees" id="totalFees">
+      </div>
+
+      <ng-container *ngIf="studentsOnly">
+        <div class="form-group">
+          <label for="benefittedFromFund" class="label">Have you ever benefitted from the county bursary fund</label>
+          <nb-radio-group id="benefittedFromFund" formControlName="benefittedFromFund">
+            <nb-radio  (change)="changeBenefittedFromSecondary($event)"
+                       [value]=true>
+              Yes
+            </nb-radio>
+            <nb-radio (change)="changeBenefittedFromSecondary($event)"
+                      [value]=false>
+              No
+            </nb-radio>
+          </nb-radio-group>
+        </div>
+      </ng-container>
+
+      <ng-container  *ngIf="!studentsOnly || hasBenefittedFromFund">
+        <div class="form-group">
+          <label for="benefittedFromFundAmount" class="label">Benefitted From Fund amount</label>
+          <input type="number" nbInput [disabled]="!studentsOnly" fullWidth formControlName="benefittedFromFundAmount" id="benefittedFromFundAmount">
+        </div>
+      </ng-container>
+
+      <div class="form-group">
+        <label for="dayOrBoarder" class="label"> Day Scholar or a Boarder?</label>
+        <nb-radio-group id="dayOrBoarder"  [disabled]="!studentsOnly" formControlName="dayOrBoarder" *ngFor="let value of dayOrBoarder">
+          <nb-radio value="{{value.key}}">{{value.value}}</nb-radio>
+        </nb-radio-group>
+      </div>
+      <div class="form-group">
+        <label for="totalFees" class="label">Outstanding Balance</label>
+        <input type="number" nbInput fullWidth  [disabled]="!studentsOnly" formControlName="outstandingBalance" id="outstandingBalance">
+      </div>
+    </form>
+  </ng-container>
+
+
+
+
+  <form formGroupName="schoolVerificationForm">
+    <p class="lorem">
+      School verification
+    </p>
+    <ng-container *ngIf="!studentsOnly || (studentsOnly && isJoiningSecondaryOrContinuing === 'Continuing')">
+      <div class="form-group">
+        <label for="academicYear" class="label">Academic Year</label>
+        <input type="number" [disabled]="!studentsOnly" nbInput fullWidth formControlName="academicYear" id="academicYear">
+      </div>
+      <div class="form-group">
+        <label for="position" class="label">Position in Class or Form</label>
+        <input type="number" [disabled]="!studentsOnly" [value]="application.schoolVerification.position" nbInput fullWidth formControlName="position" id="position" placeholder="">
+      </div>
+      <div class="form-group">
+        <label for="schoolGrade" class="label">Grade</label>
+        <nb-select id="schoolGrade" [disabled]="!studentsOnly" formControlName="schoolGrade">
+          <nb-option  *ngFor="let grade of schoolGrades" [value]="grade.key">
+            {{grade.value}}
+          </nb-option>
+        </nb-select>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="user.userType === 'PRINCIPAL'">
+      <div class="input-group">
+        <label for="principalComment" class="label">Principal/'s Comment</label>
+        <input type="text" placeholder="" class="form-control" formControlName="principalComment"
+               id="principalComment">
+      </div>
+    </ng-container>
+  </form>
+  <form formGroupName="wardAdministratorForm">
+    <div class="form-group">
+      <label for="familyStatusComment" class="label">Family Status Comment</label>
+      <input type="text" nbInput fullWidth formControlName="familyStatusComment" id="familyStatusComment" placeholder="">
+    </div>
+</form>

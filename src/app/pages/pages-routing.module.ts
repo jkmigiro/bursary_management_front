@@ -9,6 +9,8 @@ import {ApplicationComponent} from '../application/application.component';
 import {RegisterComponent} from '../components/register/register.component';
 import {ProfileComponent} from '../components/profile/profile.component';
 import {AboutComponent} from '../components/about/about.component';
+import {MyApplicationsComponent} from '../components/my-applications/my-applications.component';
+import {AppDetailsComponent} from '../components/application-details/app-details/app-details.component';
 
 const routes: Routes = [{
   path: '',
@@ -23,9 +25,14 @@ const routes: Routes = [{
       component: ECommerceComponent,
     },
     {
-      path: 'application',
+      path: 'apply',
       component: ApplicationComponent,
     },
+    {
+      path: 'applications',
+      component: MyApplicationsComponent,
+    },
+    { path: 'applications/:id', component: AppDetailsComponent },
     {
       path: 'register',
       component: RegisterComponent,

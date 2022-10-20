@@ -283,10 +283,10 @@
                   <input type="text" nbInput fullWidth formControlName="nimsNumber" id="nimsNumber" placeholder="Nims Number">
                 </div>
 
-                <div class="form-group">
-                  <label for="forNumber" class="label">For Number</label>
-                  <input type="text" nbInput fullWidth formControlName="forNumber" id="forNumber" placeholder="For Number">
-                </div>
+<!--                <div class="form-group">-->
+<!--                  <label for="forNumber" class="label">For Number</label>-->
+<!--                  <input type="text" nbInput fullWidth formControlName="forNumber" id="forNumber" placeholder="For Number">-->
+<!--                </div>-->
                 <div class="form-group">
                   <label for="idNumber" class="label">Id Number</label>
                   <input type="text" nbInput fullWidth formControlName="idNumber" id="idNumber" placeholder="ID Number">
@@ -351,7 +351,7 @@
                 <div class="form-group">
                   <label for="schoolStatus" class="label">School Status</label>
                   <nb-select id="schoolStatus" formControlName="schoolStatus">
-                    <nb-option *ngFor="let status of familyStatuses" [value]="status.key">{{status.value}}</nb-option>
+                    <nb-option *ngFor="let status of schoolStatuses" [value]="status.key">{{status.value}}</nb-option>
                   </nb-select>
                 </div>
                 <!--                Start of school bank account details-->
@@ -429,16 +429,7 @@
               </form>
 
 
-          <form [formGroup]="wardAdministratorForm" (ngSubmit)="onSchoolVerificationDetailsSubmit()" class="step-container">
-            <div class="form-group">
-              <label for="familyStatusComment" class="label">Family Status Comment</label>
-              <input type="text" nbInput fullWidth formControlName="familyStatusComment" id="familyStatusComment" placeholder="">
-            </div>
-            <div class="form-group">
-              <label for="wardAdministratorName" class="label">Ward Administrator Name</label>
-              <input type="text" nbInput fullWidth formControlName="name" id="wardAdministratorName" placeholder="">
-            </div>
-          </form>
+
 
 
 
@@ -477,11 +468,6 @@
                     <input type="file" nbInput fullWidth formControlName="admissionLetter" id="admissionLetter" (change)="selectFile($event, 'admissionLetter')">
                   </div>
                 </ng-container>
-                <div class="input-group">
-                  <label for="principalComment" class="label">Principal's Comment</label>
-                  <input type="text" placeholder="" class="form-control" formControlName="principalComment"
-                         id="principalComment">
-                </div>
               </form>
 
 

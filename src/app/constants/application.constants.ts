@@ -398,6 +398,10 @@ export class ApplicationConstants {
       key: 'SCHOOL',
       value: 'School',
     },
+    {
+      key: 'EDUCATION_OFFICIAL',
+      value: 'Education Official',
+    },
   ];
 
   static COUNTRIES: Country[] = [

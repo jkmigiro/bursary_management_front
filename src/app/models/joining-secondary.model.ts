@@ -7,7 +7,7 @@ export class JoiningSecondary {
   public outstandingBalance: number = null;
   public benefittedFromFund: boolean = null;
   public benefittedFromFundAmount: number;
-  public dayOrBorder: DayOrBoarder = null;
+  public dayOrBoarder: DayOrBoarder = null;
   public totalFees: number = null;
   public feesStructure: File = null;
   public joiningSecondaryOrContinuing: JoiningSecondaryOrContinuing = null;

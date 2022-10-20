@@ -18,6 +18,8 @@ export class ApplicationService {
   private loggedInSubject: BehaviorSubject<boolean>;
   public user: Observable<User>;
   public loggedIn: Observable<boolean>;
+  private selectedApplicationSubject: BehaviorSubject<Application>;
+  selectedApplication: Observable<Application>;
   constructor(private http: HttpClient) {
     this.userSubject = new BehaviorSubject<User>(
       JSON.parse(localStorage.getItem('currentUser')),
@@ -25,6 +27,8 @@ export class ApplicationService {
     this.user = this.userSubject.asObservable();
     this.loggedInSubject = new BehaviorSubject<boolean>(false);
     this.loggedIn = this.loggedInSubject.asObservable();
+    this.selectedApplicationSubject = new BehaviorSubject<Application>(new Application());
+    this.selectedApplication = this.selectedApplicationSubject.asObservable();
   }
   public get userValue(): User {
     return this.userSubject.value;
@@ -60,7 +64,7 @@ export class ApplicationService {
         });
   }
 
-  login(email: string, password: string) {
+  login(email: string, password: string): Observable<User> {
     return this.http
       .post<User>(this.url + '/auth/login', { email, password })
       .pipe(
@@ -136,6 +140,11 @@ export class ApplicationService {
       () => {
         console.log('The POST observable is now completed.');
       });
+  }
+
+  updateSelectedApplication(application: any): void {
+    console.log('Application: ', application);
+    this.selectedApplicationSubject.next(application);
   }
 
 }

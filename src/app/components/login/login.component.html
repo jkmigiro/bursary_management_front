@@ -83,6 +83,11 @@
           [class.btn-pulse]="submitted">
     Log In
   </button>
+  <ng-container *ngIf="loginForm.valid && submitted && (errors != undefined || errors != null)">
+    <p class="caption status-danger">
+      {{errors}}
+    </p>
+  </ng-container>
 </form>
 
 <section class="another-action" aria-label="Register">
