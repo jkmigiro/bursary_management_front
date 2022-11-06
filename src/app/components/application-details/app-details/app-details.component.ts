@@ -15,6 +15,7 @@ import {ApplicationConstants} from '../../../constants/application.constants';
 export class AppDetailsComponent implements OnInit {
   application: Application;
   user: User;
+  users: Users;
   joiningSecondaryForm: FormGroup;
   schoolVerificationForm: FormGroup;
   wardAdministratorForm: FormGroup;

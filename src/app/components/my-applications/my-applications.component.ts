@@ -340,7 +340,7 @@ export class MyApplicationsComponent implements OnInit {
         reviewedDate: null,
         schoolVerification: schoolVerification,
         type: '',
-        wardAdministrators: [],
+        wardAdministrator: null,
       };
       this.applications.push(application);
     }
