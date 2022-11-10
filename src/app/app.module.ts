@@ -16,10 +16,10 @@ import {
   NbCardModule,
   NbChatModule, NbCheckboxModule,
   NbDatepickerModule,
-  NbDialogModule, NbIconModule, NbInputModule,
+  NbDialogModule, NbIconModule, NbInputModule, NbListModule,
   NbMenuModule, NbRadioModule, NbSelectModule,
   NbSidebarModule, NbStepperModule,
-  NbToastrModule,
+  NbToastrModule, NbUserModule,
   NbWindowModule,
 } from '@nebular/theme';
 import {ApplicationComponent} from './application/application.component';
@@ -53,6 +53,8 @@ import { AppDetailsStudentComponent } from './components/application-details/app
 import { AppDetailsAdminComponent } from './components/application-details/app-details-admin/app-details-admin.component';
 import { AppDetailsManagerComponent } from './components/application-details/app-details-manager/app-details-manager.component';
 import { AppDetailsComponent } from './components/application-details/app-details/app-details.component';
+import { MarkAsteriskDirective } from './directives/mark-asterisk.directive';
+import { LogoutComponent } from './components/logout/logout.component';
 
 @NgModule({
   declarations: [AppComponent,
@@ -75,7 +77,9 @@ import { AppDetailsComponent } from './components/application-details/app-detail
     AppDetailsStudentComponent,
     AppDetailsAdminComponent,
     AppDetailsManagerComponent,
-    AppDetailsComponent],
+    AppDetailsComponent,
+    MarkAsteriskDirective,
+    LogoutComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -112,6 +116,8 @@ import { AppDetailsComponent } from './components/application-details/app-detail
     MatIconModule,
     MatDividerModule,
     MatButtonModule,
+    NbListModule,
+    NbUserModule,
   ],
   providers: [{provide: NbTokenStorage, useClass: NbTokenLocalStorage}],
   bootstrap:

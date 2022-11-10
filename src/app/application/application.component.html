@@ -4,222 +4,510 @@
       <nb-card>
         <nb-card-body>
 
-              <form [formGroup]="studentDetails" (ngSubmit)="onStudentDetailsSubmit()" class="step-container">
-                <p class="lorem">
-                  Personal Details
-                </p>
+          <nb-card>
+            <nb-card-header>
+              Student Personal Details
+            </nb-card-header>
+            <nb-card-body>
+              <form [formGroup]="studentDetails" (ngSubmit)="onStudentDetailsSubmit()">
                 <!--                Currently logged in student user will be the one in session-->
                 <!--                All that is needed is the application details to be submitted-->
-                <div class="form-group">
+                <div class="form-group mat-form-field-required-marker">
                   <!--                  List-->
-                  <label for="county" class="label">County</label>
-                  <nb-select id="county" formControlName="county">
+                  <p class="label">County<span class="required-asterisk">*</span></p>
+                  <nb-select id="county" [required] formControlName="county">
                     <nb-option *ngFor="let value of counties;" [value]="value.id">{{value.name}}</nb-option>
                   </nb-select>
+                  <ng-container *ngIf="studentDetailsForm.county.invalid">
+                    <p class="caption status-danger" *ngIf="studentDetailsForm.county.errors.requiredTrue">
+                      Select a County!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
-                  <label for="subCounty" class="label">Sub-County</label>
-                  <input type="text" nbInput fullWidth formControlName="subCounty" id="subCounty" placeholder="Sub County">
-                </div>
-                <div class="form-group">
-                  <label for="wardName" class="label">Ward Name</label>
-                  <input type="text" nbInput fullWidth formControlName="wardName" id="wardName" placeholder="Ward Name">
-                </div>
-                <div class="form-group">
-                  <label for="nimsNumber" class="label">Nims Number</label>
-                  <input type="text" nbInput fullWidth formControlName="nimsNumber" id="nimsNumber" placeholder="Nims Number">
-                </div>
+                  <label  ngxMarkAsterisk for="subCounty" class="label">Sub-County</label>
+                  <input type="text" nbInput fullWidth formControlName="subCounty" id="subCounty"
+                         placeholder="Sub County">
 
-<!--                <div class="form-group">-->
-<!--                  <label for="forNumber" class="label">For Number</label>-->
-<!--                  <input type="text" nbInput fullWidth formControlName="forNumber" id="forNumber" placeholder="For Number">-->
-<!--                </div>-->
-                <div class="form-group">
-                  <label for="idNumber" class="label">Id Number</label>
-                  <input type="text" nbInput fullWidth formControlName="idNumber" id="idNumber" placeholder="ID Number">
+                  <ng-container *ngIf="studentDetailsForm.subCounty.touched && studentDetailsForm.subCounty.invalid">
+                    <p class="caption status-danger" *ngIf="studentDetailsForm.subCounty.errors.required">
+                      Sub-County is required!
+                    </p>
+                  </ng-container>
                 </div>
+                <div class="form-group">
+                  <label for="wardName" ngxMarkAsterisk class="label">Ward Name</label>
+                  <input type="text" nbInput fullWidth formControlName="wardName" id="wardName" placeholder="Ward Name">
+
+                  <ng-container *ngIf="studentDetailsForm.wardName.touched && studentDetailsForm.wardName.invalid">
+                    <p class="caption status-danger" *ngIf="studentDetailsForm.wardName.errors.required">
+                      Ward Name is required!
+                    </p>
+                  </ng-container>
+
+                </div>
+                <div class="form-group">
+                  <label for="nimsNumber" ngxMarkAsterisk class="label">NIIMS Number</label>
+                  <input type="text" nbInput fullWidth formControlName="nimsNumber" id="nimsNumber"
+                         placeholder="NIIMS Number">
+                  <ng-container *ngIf="studentDetailsForm.nimsNumber.touched && studentDetailsForm.nimsNumber.invalid">
+                    <p class="caption status-danger" *ngIf="studentDetailsForm.nimsNumber.errors.required">
+                      NIIMS Number is required!
+                    </p>
+                    <p class="caption status-danger" *ngIf="studentDetailsForm.nimsNumber.errors.minLength">
+                      NIIMS Number cannot be empty
+                    </p>
+
+                  </ng-container>
+                </div>
+                <!--            <div class="form-group">-->
+                <!--              <label for="idNumber" class="label">Id Number</label>-->
+                <!--              <input type="text" nbInput fullWidth formControlName="idNumber" id="idNumber" placeholder="ID Number">-->
+                <!--            </div>-->
 
               </form>
+            </nb-card-body>
+          </nb-card>
 
+          <nb-card>
+            <nb-card-header>
+              Family and financial status
+            </nb-card-header>
+            <nb-card-body>
               <form [formGroup]="familyDetails" (ngSubmit)="onFamilyDetailsSubmit()" class="step-container">
-                <p class="lorem">
-                  Family and financial status
-                </p>
                 <div class="form-group">
-                  <label for="parentOrGuardianName" class="label">Parent/Guardian Name</label>
-                  <input type="text" nbInput fullWidth formControlName="parentOrGuardianName" id="parentOrGuardianName" placeholder="">
+                  <label for="userRelation" ngxMarkAsterisk class="label">Parent or Guardian
+                    </label>
+                  <nb-radio-group id="userRelation" formControlName="userRelation">
+                    <nb-radio
+                              value="PARENT">
+                      Parent
+                    </nb-radio>
+                    <nb-radio value="GUARDIAN">
+                      Guardian
+                    </nb-radio>
+                  </nb-radio-group>
+                  <ng-container *ngIf="joiningSecondaryDetailsForm.benefitedFromFund.touched && joiningSecondaryDetailsForm.benefitedFromFund.invalid">
+                    <p class="caption status-danger" *ngIf="joiningSecondaryDetailsForm.benefitedFromFund.errors.required">
+                      State whether you have ever benefited from the bursary fund!
+                    </p>
+                  </ng-container>
+                </div>
+                <div class="form-group">
+                  <label for="parentOrGuardianFirstName" ngxMarkAsterisk class="label">Parent/Guardian First Name</label>
+                  <input type="text" nbInput fullWidth formControlName="parentOrGuardianFirstName" id="parentOrGuardianFirstName"
+                         placeholder="">
+                  <ng-container *ngIf="familyDetailsForm.parentOrGuardianFirstName.touched && familyDetailsForm.parentOrGuardianFirstName.invalid">
+                    <p class="caption status-danger" *ngIf="familyDetailsForm.parentOrGuardianFirstName.errors.required">
+                      Parent or Guardian First Name is required!
+                    </p>
+                  </ng-container>
+                </div>
+                <div class="form-group">
+                  <label for="parentOrGuardianMiddleName" ngxMarkAsterisk class="label">Parent/Guardian Middle Name</label>
+                  <input type="text" nbInput fullWidth formControlName="parentOrGuardianMiddleName" id="parentOrGuardianMiddleName"
+                         placeholder="">
+                </div>
+                <div class="form-group">
+                  <label for="parentOrGuardianLastName" ngxMarkAsterisk class="label">Parent/Guardian Last Name</label>
+                  <input type="text" nbInput fullWidth formControlName="parentOrGuardianLastName" id="parentOrGuardianLastName"
+                         placeholder="">
+                  <ng-container *ngIf="familyDetailsForm.parentOrGuardianLastName.touched && familyDetailsForm.parentOrGuardianLastName.invalid">
+                    <p class="caption status-danger" *ngIf="familyDetailsForm.parentOrGuardianLastName.errors.required">
+                      Parent or Guardian Last Name is required!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
                   <label for="parentOrGuardianOccupation" class="label">Parent/Guardian Occupation</label>
-                  <input type="text" nbInput fullWidth formControlName="parentOrGuardianOccupation" id="parentOrGuardianOccupation" placeholder="">
+                  <input type="text" nbInput fullWidth formControlName="parentOrGuardianOccupation"
+                         id="parentOrGuardianOccupation" placeholder="">
                 </div>
                 <div class="form-group">
-                  <label for="parentOrGuardianTelephone" class="label">Parent/Guardian Telephone</label>
-                  <input type="text" nbInput fullWidth formControlName="parentOrGuardianTelephone" id="parentOrGuardianTelephone" placeholder="">
+                  <label for="parentOrGuardianTelephone" ngxMarkAsterisk class="label">Parent/Guardian Telephone</label>
+                  <input type="text" nbInput fullWidth formControlName="parentOrGuardianTelephone"
+                         id="parentOrGuardianTelephone" placeholder="">
+                  <ng-container *ngIf="familyDetailsForm.parentOrGuardianTelephone.touched && familyDetailsForm.parentOrGuardianTelephone.invalid">
+                    <p class="caption status-danger" *ngIf="familyDetailsForm.parentOrGuardianTelephone.errors.required">
+                      Parent or Guardian Telephone is required!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
-                  <label for="familyStatus" class="label">Family Status</label>
+                  <p class="label">Family Status<span class="required-asterisk">*</span></p>
                   <nb-select id="familyStatus" formControlName="familyStatus">
                     <nb-option *ngFor="let status of familyStatuses" [value]="status.key">{{status.value}}</nb-option>
                   </nb-select>
+                  <ng-container *ngIf="familyDetailsForm.familyStatus.touched && familyDetailsForm.familyStatus.invalid">
+                    <p class="caption status-danger" *ngIf="familyDetailsForm.familyStatus.errors.required">
+                      Family Status is required!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
                   <label for="grossIncomePerYear" class="label">Gross Income Per Year</label>
-                  <input type="number" nbInput fullWidth formControlName="grossIncomePerYear" id="grossIncomePerYear" placeholder="">
+                  <input type="number" nbInput fullWidth formControlName="grossIncomePerYear" id="grossIncomePerYear"
+                         placeholder="">
+                  <ng-container *ngIf="familyDetailsForm.grossIncomePerYear.touched && familyDetailsForm.grossIncomePerYear.invalid">
+                    <p class="caption status-danger" *ngIf="familyDetailsForm.grossIncomePerYear.errors.pattern">
+                      Gross income per year should be a number!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
-                  <label for="birthCertificate" class="label">Birth Certificate (Mandatory) </label>
-                  <input type="file" nbInput fullWidth formControlName="birthCertificate" id="birthCertificate"  (change)="selectFile($event, 'birthCertificate')">
+                  <label for="birthCertificate" ngxMarkAsterisk class="label">Birth Certificate (Mandatory) </label>
+                  <input type="file" nbInput fullWidth formControlName="birthCertificate" id="birthCertificate"
+                         (change)="selectFile($event, 'birthCertificate')">
+                  <ng-container *ngIf="familyDetailsForm.birthCertificate.touched && familyDetailsForm.birthCertificate.invalid">
+                    <p class="caption status-danger" *ngIf="familyDetailsForm.birthCertificate.errors.required">
+                     Birth Certificate is required!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
                   <label for="familyIncomeDocuments" class="label">Family Income Documents (if any) </label>
-                  <input type="file" nbInput fullWidth formControlName="familyIncomeDocuments" id="familyIncomeDocuments"  (change)="selectFile($event, 'familyIncomeDocuments')">
+                  <input type="file" nbInput fullWidth formControlName="familyIncomeDocuments"
+                         id="familyIncomeDocuments" (change)="selectFile($event, 'familyIncomeDocuments')">
                 </div>
                 <div class="form-group">
-                  <label for="otherStudentDocuments" class="label">Other Documents example medicals  </label>
-                  <input type="file" multiple nbInput fullWidth formControlName="otherStudentDocuments" id="otherStudentDocuments" (change)="selectFiles($event)">
+                  <label for="otherStudentDocuments" class="label">Other Documents example medicals </label>
+                  <input type="file" multiple nbInput fullWidth formControlName="otherStudentDocuments"
+                         id="otherStudentDocuments" (change)="selectFiles($event)">
+
+                  <ng-container *ngIf="excessFiles">
+                    <p class="caption status-danger">
+                      You cannot choose more than 5 files
+                    </p>
+                  </ng-container>
+                  <ng-container *ngIf="sizeOfSelectedFiles > 10">
+                  <p class="caption status-danger">
+                    Maximum size allowable is 10MB
+                  </p>
+                  </ng-container>
                 </div>
               </form>
+            </nb-card-body>
+          </nb-card>
 
 
-            <!--Start of school details-->
+          <!--Start of school details-->
 
 
-
-              <form [formGroup]="schoolDetails" (ngSubmit)="onSchoolDetailsSubmit()" class="step-container">
-                <p class="lorem">
-                  School details
-                </p>
+          <nb-card>
+            <nb-card-header>
+              School details
+            </nb-card-header>
+            <nb-card-body>
+              <form [formGroup]="schoolDetails" (ngSubmit)="onSchoolDetailsSubmit()">
                 <div class="form-group">
-                  <label for="wardName" class="label">Name of School</label>
-                  <input type="text" nbInput fullWidth formControlName="schoolName" id="schoolName" placeholder="Name of School">
+                  <label for="schoolName" ngxMarkAsterisk class="label">Name of School</label>
+                  <input type="text" nbInput fullWidth formControlName="schoolName" id="schoolName"
+                         placeholder="Name of School">
+                  <ng-container *ngIf="schoolDetailsForm.schoolName.touched && schoolDetailsForm.schoolName.invalid">
+                    <p class="caption status-danger" *ngIf="schoolDetailsForm.schoolName.errors.required">
+                      Name of school is required!
+                    </p>
+                  </ng-container>
                 </div>
 
                 <div class="form-group">
-                  <label for="schoolStatus" class="label">School Status</label>
+                  <p class="label">School Status<span class="required-asterisk">*</span></p>
                   <nb-select id="schoolStatus" formControlName="schoolStatus">
                     <nb-option *ngFor="let status of schoolStatuses" [value]="status.key">{{status.value}}</nb-option>
                   </nb-select>
+                  <ng-container *ngIf="schoolDetailsForm.schoolStatus.touched && schoolDetailsForm.schoolStatus.invalid">
+                    <p class="caption status-danger" *ngIf="schoolDetailsForm.schoolStatus.errors.required">
+                      School status is required!
+                    </p>
+                  </ng-container>
                 </div>
                 <!--                Start of school bank account details-->
                 <div class="form-group">
-                  <label for="schoolAccountNumber" class="label">School Account Number</label>
-                  <input type="text" nbInput fullWidth formControlName="schoolAccountNumber" id="schoolAccountNumber" placeholder="School Account Number">
+                  <label for="schoolAccountNumber" ngxMarkAsterisk class="label">School Account Number</label>
+                  <input type="text" nbInput fullWidth formControlName="schoolAccountNumber" id="schoolAccountNumber"
+                         placeholder="School Account Number">
+                  <ng-container *ngIf="schoolDetailsForm.schoolAccountNumber.touched && schoolDetailsForm.schoolAccountNumber.invalid">
+                    <p class="caption status-danger" *ngIf="schoolDetailsForm.schoolAccountNumber.errors.required">
+                      School Account Number is required!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
-                  <label for="schoolAccountName" class="label">School Account Name</label>
-                  <input type="text" nbInput fullWidth formControlName="schoolAccountName" id="schoolAccountName" placeholder="School Account Name">
+                  <label for="schoolAccountName" ngxMarkAsterisk class="label">School Account Name</label>
+                  <input type="text" nbInput fullWidth formControlName="schoolAccountName" id="schoolAccountName"
+                         placeholder="School Account Name">
+                  <ng-container *ngIf="schoolDetailsForm.schoolAccountName.touched && schoolDetailsForm.schoolAccountName.invalid">
+                    <p class="caption status-danger" *ngIf="schoolDetailsForm.schoolAccountName.errors.required">
+                      School Account Name is required!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
-                  <label for="schoolAccountBankBranch" class="label">School Account Bank Branch</label>
-                  <input type="text" nbInput fullWidth formControlName="schoolAccountBankBranch" id="schoolAccountBankBranch" placeholder="School Account Bank Branch">
+                  <label for="schoolAccountBankBranch" ngxMarkAsterisk class="label">School Account Bank Branch</label>
+                  <input type="text" nbInput fullWidth formControlName="schoolAccountBankBranch"
+                         id="schoolAccountBankBranch" placeholder="School Account Bank Branch">
+                  <ng-container *ngIf="schoolDetailsForm.schoolAccountBankBranch.touched && schoolDetailsForm.schoolAccountBankBranch.invalid">
+                    <p class="caption status-danger" *ngIf="schoolDetailsForm.schoolAccountBankBranch.errors.required">
+                      School Account Bank Branch is required!
+                    </p>
+                  </ng-container>
                 </div>
 
                 <!--              End of school details-->
               </form>
+            </nb-card-body>
+          </nb-card>
 
 
-
-
-          <div>
-            <label for="joiningSecondary" class="label">Are you Joining Secondary or Continuing</label>
-            <mat-radio-group
-              aria-labelledby="joiningSecondary"
-              id="joiningSecondary"
-              [(ngModel)]="isJoiningSecondaryOrContinuing">
-              <mat-radio-button class="example-radio-button" *ngFor="let val of JOINING_OR_CONTINUING"  [value]="val.key">
-                {{val.value}}
-              </mat-radio-button>
-            </mat-radio-group>
-<!--            <div>Your favorite season is: {{isJoiningSecondaryOrContinuing}}</div>-->
-          </div>
-
-              <form *ngIf="isJoiningSecondaryOrContinuing == 'Joining Secondary' || 'Continuing'" [formGroup]="joiningSecondaryDetails" (ngSubmit)="onJoiningSecondaryDetailsSubmit()" class="step-container">
-                <p class="lorem">
-                  Joining secondary
+          <nb-card>
+            <nb-card-header>
+            </nb-card-header>
+            <nb-card-body>
+              <form [formGroup]="joiningSecondaryDetails">
+                <div class="form-group">
+                  <label for="joiningSecondary" ngxMarkAsterisk class="label">Are you Joining Secondary or Continuing</label>
+                  <nb-radio-group
+                    aria-labelledby="joiningSecondary"
+                    id="joiningSecondary"
+                    formControlName="joiningSecondaryOrContinuing"
+                    [(value)]="isJoiningSecondaryOrContinuing">
+                    <nb-radio *ngFor="let val of JOINING_OR_CONTINUING" [value]="val.key">
+                      {{val.value}}
+                    </nb-radio>
+                  </nb-radio-group>
+                  <!--            <div>Your favorite season is: {{isJoiningSecondaryOrContinuing}}</div>-->
+                </div>
+              </form>
+              <div>
+                <p>
+                  I am {{isJoiningSecondaryOrContinuing}}
                 </p>
+              </div>
+            </nb-card-body>
+          </nb-card>
+
+          <nb-card>
+            <nb-card-header>
+              For those Joining Secondary School or Continuing Students
+            </nb-card-header>
+            <nb-card-body>
+              <form *ngIf="isJoiningSecondaryOrContinuing == 'JOINING' || 'CONTINUING'"
+                    [formGroup]="joiningSecondaryDetails" (ngSubmit)="onJoiningSecondaryDetailsSubmit()">
                 <div class="form-group">
                   <label for="totalFees" class="label">Total Fees (per year)</label>
                   <input type="number" nbInput fullWidth formControlName="totalFees" id="totalFees">
+                  <ng-container *ngIf="joiningSecondaryDetailsForm.totalFees.touched && joiningSecondaryDetailsForm.totalFees.invalid">
+                    <p class="caption status-danger" *ngIf="joiningSecondaryDetailsForm.totalFees.errors.pattern">
+                      Total Fees should be a number!
+                    </p>
+                  </ng-container>
+                  <ng-container *ngIf="joiningSecondaryDetailsForm.totalFees.touched && joiningSecondaryDetailsForm.totalFees.invalid">
+                    <p class="caption status-danger" *ngIf="joiningSecondaryDetailsForm.totalFees.errors.min">
+                      Total Fees cannot be a negative number!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
-                  <label for="benefittedFromFund" class="label">Have you ever benefitted from the county bursary fund</label>
-                  <nb-radio-group id="benefittedFromFund" formControlName="benefittedFromFund">
-                    <nb-radio  (change)="changeBenefittedFromSecondary($event)"
-                               [value]=true>
+                  <label for="totalFees" class="label">Outstanding Balance</label>
+                  <input type="number" nbInput fullWidth formControlName="outstandingBalance" id="outstandingBalance"
+                         placeholder="">
+                  <ng-container *ngIf="joiningSecondaryDetailsForm.totalFees.touched && joiningSecondaryDetailsForm.totalFees.invalid">
+                    <p class="caption status-danger" *ngIf="joiningSecondaryDetailsForm.outstandingBalance.errors.pattern">
+                      Outstanding balance should be a number!
+                    </p>
+                  </ng-container>
+
+                </div>
+                <div class="form-group">
+                  <label for="benefitedFromFund" ngxMarkAsterisk class="label">Have you ever benefited from the county bursary
+                    fund</label>
+                  <nb-radio-group id="benefitedFromFund" formControlName="benefitedFromFund">
+                    <nb-radio (change)="changeBenefitedFromSecondary($event)"
+                              [value]=true>
                       Yes
                     </nb-radio>
-                    <nb-radio (change)="changeBenefittedFromSecondary($event)"
+                    <nb-radio (change)="changeBenefitedFromSecondary($event)"
                               [value]=false>
                       No
                     </nb-radio>
                   </nb-radio-group>
+                  <ng-container *ngIf="joiningSecondaryDetailsForm.benefitedFromFund.touched && joiningSecondaryDetailsForm.benefitedFromFund.invalid">
+                    <p class="caption status-danger" *ngIf="joiningSecondaryDetailsForm.benefitedFromFund.errors.required">
+                     State whether you have ever benefited from the bursary fund!
+                    </p>
+                  </ng-container>
                 </div>
-                <div *ngIf="hasBenefittedFromFund" class="form-group">
-                  <label for="benefittedFromFundAmount" class="label">Benefitted From Fund amount</label>
-                  <input type="number" nbInput fullWidth formControlName="benefittedFromFundAmount" id="benefittedFromFundAmount" placeholder="">
+                <div *ngIf="hasBenefitedFromFund" class="form-group">
+                  <label for="benefitedFromFundAmount" class="label">Benefited From Fund amount</label>
+                  <input type="number" nbInput fullWidth formControlName="benefitedFromFundAmount"
+                         id="benefitedFromFundAmount" placeholder="">
+                  <ng-container *ngIf="joiningSecondaryDetailsForm.benefitedFromFundAmount.touched && joiningSecondaryDetailsForm.benefitedFromFundAmount.invalid">
+                    <p class="caption status-danger" *ngIf="joiningSecondaryDetailsForm.benefitedFromFundAmount.errors.benefitedFromFundAmount">
+                      If Benefited for fund, Please enter the amount you benefited!
+                    </p>
+                  </ng-container>
+                  <ng-container *ngIf="joiningSecondaryDetailsForm.benefitedFromFundAmount.touched && joiningSecondaryDetailsForm.benefitedFromFundAmount.invalid">
+                    <p class="caption status-danger" *ngIf="joiningSecondaryDetailsForm.benefitedFromFundAmount.errors.pattern">
+                     Benefited for fund amount must be a number!
+                    </p>
+                  </ng-container>
+                  <ng-container *ngIf="joiningSecondaryDetailsForm.benefitedFromFundAmount.touched && joiningSecondaryDetailsForm.benefitedFromFundAmount.invalid">
+                    <p class="caption status-danger" *ngIf="joiningSecondaryDetailsForm.benefitedFromFundAmount.errors.min">
+                      Benefited for fund amount cannot be negative!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
-                  <label for="dayOrBoarder" class="label">Are you a Day Scholar or a Boarder?</label>
+                  <label for="dayOrBoarder" ngxMarkAsterisk class="label">Are you a Day Scholar or a Boarder?</label>
                   <nb-radio-group id="dayOrBoarder" formControlName="dayOrBoarder" *ngFor="let value of dayOrBoarder">
                     <nb-radio value="{{value.key}}">{{value.value}}</nb-radio>
                   </nb-radio-group>
+                  <ng-container *ngIf="joiningSecondaryDetailsForm.dayOrBoarder.touched && joiningSecondaryDetailsForm.dayOrBoarder.invalid">
+                    <p class="caption status-danger" *ngIf="joiningSecondaryDetailsForm.dayOrBoarder.errors.required">
+                      State whether you are a Day Scholar or Boarder!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
-                  <label for="totalFees" class="label">Outstanding Balance</label>
-                  <input type="number" nbInput fullWidth formControlName="outstandingBalance" id="outstandingBalance" placeholder="">
-                </div>
-                <div class="form-group">
-                  <label for="feesStructure" class="label">Fee Structure </label>
-                  <input type="file" nbInput fullWidth formControlName="feesStructure" id="feesStructure"  (change)="selectFile($event, 'feesStructure')">
+                  <label for="feesStructure" ngxMarkAsterisk class="label">Fee Structure </label>
+                  <input type="file" nbInput fullWidth formControlName="feesStructure" id="feesStructure"
+                         (change)="selectFile($event, 'feesStructure')">
+                  <ng-container *ngIf="joiningSecondaryDetailsForm.feesStructure.touched && joiningSecondaryDetailsForm.feesStructure.invalid">
+                    <p class="caption status-danger" *ngIf="joiningSecondaryDetailsForm.feesStructure.errors.required">
+                      Fees Structure is Mandatory!
+                    </p>
+                  </ng-container>
                 </div>
               </form>
+            </nb-card-body>
+          </nb-card>
 
-              <!--              Applies only when they are continuing students-->
-              <form [formGroup]="schoolVerificationDetails" (ngSubmit)="onSchoolVerificationDetailsSubmit()" class="step-container">
-                <p class="lorem">
-                  School verification
-                </p>
-                <ng-container *ngIf="isJoiningSecondaryOrContinuing === 'Continuing'">
-                  <div class="form-group">
-                    <label for="academicYear" class="label">Academic Year</label>
-                    <input type="number" nbInput fullWidth formControlName="academicYear" id="academicYear" placeholder="">
-                  </div>
-                  <div class="form-group">
-                    <label for="position" class="label">Position in Class or Form</label>
-                    <input type="number" nbInput fullWidth formControlName="position" id="position" placeholder="">
-                  </div>
-                  <div class="form-group">
-                    <label for="schoolGrade" class="label">Grade</label>
-                    <nb-select id="schoolGrade" formControlName="schoolGrade">
-                      <nb-option  *ngFor="let grade of schoolGrades" [value]="grade.key">
-                        {{grade.value}}
-                      </nb-option>
-                    </nb-select>
-<!--                    <nb-select >-->
-<!--                      <nb-option >{{val}}</nb-option>-->
-<!--                    </nb-select>-->
-                  </div>
-                </ng-container>
+
+          <!--              Applies only when they are continuing students-->
+
+          <p *ngIf="isJoiningSecondaryOrContinuing">
+            {{isJoiningSecondaryOrContinuing}}
+          </p>
+          <nb-card *ngIf="isJoiningSecondaryOrContinuing === 'CONTINUING' || 'JOINING'">
+            <nb-card-header>
+              School verification
+            </nb-card-header>
+            <nb-card-body>
+
+
+
+              <form [formGroup]="schoolVerificationDetails" (ngSubmit)="onSchoolVerificationDetailsSubmit()">
+                <nb-card *ngIf="isJoiningSecondaryOrContinuing === 'CONTINUING'">
+                  <nb-card-header>
+                    School Verification for Continuing Students
+                  </nb-card-header>
+                  <nb-card-body>
+                    <ng-container >
+                      <div class="form-group">
+                        <label for="academicYear" class="label">Academic Year</label>
+                        <input type="number" nbInput fullWidth formControlName="academicYear" id="academicYear"
+                               placeholder="">
+                        <ng-container *ngIf="schoolVerificationDetailsForm.academicYear.touched && schoolVerificationDetailsForm.academicYear.invalid">
+                          <p class="caption status-danger" *ngIf="schoolVerificationDetailsForm.academicYear.errors.continuing">
+                            Academic Year is Required!
+                          </p>
+                        </ng-container>
+                        <ng-container *ngIf="schoolVerificationDetailsForm.academicYear.touched && schoolVerificationDetailsForm.academicYear.invalid">
+                          <p class="caption status-danger" *ngIf="schoolVerificationDetailsForm.academicYear.errors.pattern">
+                            Academic Year should be a number!
+                          </p>
+                        </ng-container>
+                        <ng-container *ngIf="schoolVerificationDetailsForm.academicYear.touched && schoolVerificationDetailsForm.academicYear.invalid">
+                          <p class="caption status-danger" *ngIf="schoolVerificationDetailsForm.academicYear.errors.min">
+                            Academic Year cannot be a negative number!
+                          </p>
+                        </ng-container>
+                      </div>
+                      <div class="form-group">
+                        <label for="position" class="label">Position in Class or Form</label>
+                        <input type="number" nbInput fullWidth formControlName="position" id="position" placeholder="">
+
+                        <ng-container *ngIf="schoolVerificationDetailsForm.position.touched && schoolVerificationDetailsForm.position.invalid">
+                          <p class="caption status-danger" *ngIf="schoolVerificationDetailsForm.position.errors.continuing">
+                            Position is Required!
+                          </p>
+                        </ng-container>
+                        <ng-container *ngIf="schoolVerificationDetailsForm.position.touched && schoolVerificationDetailsForm.position.invalid">
+                          <p class="caption status-danger" *ngIf="schoolVerificationDetailsForm.position.errors.pattern">
+                            Position should be a number!
+                          </p>
+                        </ng-container>
+                        <ng-container *ngIf="schoolVerificationDetailsForm.position.touched && schoolVerificationDetailsForm.position.invalid">
+                          <p class="caption status-danger" *ngIf="schoolVerificationDetailsForm.position.errors.min">
+                            Position cannot be a negative number!
+                          </p>
+                        </ng-container>
+                      </div>
+                      <div class="form-group">
+                        <p class="label">Grade</p>
+                        <nb-select id="schoolGrade" formControlName="schoolGrade">
+                          <nb-option *ngFor="let grade of schoolGrades" [value]="grade.key">
+                            {{grade.value}}
+                          </nb-option>
+                        </nb-select>
+                        <ng-container *ngIf="schoolVerificationDetailsForm.schoolGrade.touched && schoolVerificationDetailsForm.schoolGrade.invalid">
+                          <p class="caption status-danger" *ngIf="schoolVerificationDetailsForm.schoolGrade.errors.continuing">
+                            School Grade is Required!
+                          </p>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                  </nb-card-body>
+                </nb-card>
+
+                <nb-card *ngIf="isJoiningSecondaryOrContinuing === 'JOINING'">
+                  <nb-card-header>
+                    School Verification for Students Joining Secondary
+                  </nb-card-header>
+                  <nb-card-body>
+                    <ng-container >
+                      <div class="form-group">
+                        <label for="admissionLetter" class="label">Admission Letter</label>
+                        <input type="file" nbInput fullWidth formControlName="admissionLetter" id="admissionLetter"
+                               (change)="selectFile($event, 'admissionLetter')">
+                        <ng-container *ngIf="schoolVerificationDetailsForm.admissionLetter.touched && schoolVerificationDetailsForm.admissionLetter.invalid">
+                          <p class="caption status-danger" *ngIf="schoolVerificationDetailsForm.admissionLetter.errors.continuing">
+                            Admission Letter is Required!
+                          </p>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                  </nb-card-body>
+                </nb-card>
+
                 <!--              For those joining Form One should have an admission letter-->
-                <ng-container *ngIf="isJoiningSecondaryOrContinuing === 'Joining Secondary'">
-                  <div class="form-group">
-                    <label for="admissionLetter" class="label">Admission Letter</label>
-                    <input type="file" nbInput fullWidth formControlName="admissionLetter" id="admissionLetter" (change)="selectFile($event, 'admissionLetter')">
-                  </div>
-                </ng-container>
-              </form>
 
-              <form [formGroup]="studentDeclaration" (ngSubmit)="applicationSubmit()" class="step-container">
-                <p class="lorem">
-                  Student declaration
-                </p>
-                <div class="validation-checkboxes">
-                  <nb-checkbox formControlName="studentDeclaration" status="success">I declare this is true</nb-checkbox>
-                </div>
-                <button class="btn-dark" [disabled]="studentDeclarationFormControl.invalid ">Submit</button>
               </form>
-          <button class="btn-dark" (click)="populateWithDummy()" >Populate</button>
+            </nb-card-body>
+          </nb-card>
+
+          <nb-card>
+            <nb-card-header>
+              Student declaration
+            </nb-card-header>
+            <nb-card-body>
+              <form [formGroup]="studentDeclaration" (ngSubmit)="applicationSubmit()" class="step-container">
+                <div class="validation-checkboxes">
+                  <nb-checkbox formControlName="studentDeclaration" status="success">I declare this is true
+                  </nb-checkbox>
+                </div>
+                <ng-container *ngIf="studentDeclarationForm.studentDeclaration.touched && studentDeclarationForm.studentDeclaration.invalid">
+                  <p class="caption status-danger" *ngIf="studentDeclarationForm.studentDeclaration.errors.requiredTrue">
+                   Please tick the checkbox
+                  </p>
+                </ng-container>
+                <button nbButton status="primary" [disabled]="studentDeclaration.invalid ">Submit</button>
+              </form>
+              <button nbButton status="info" (click)="populateWithDummy()">Populate</button>
+              <p class="caption status-info" >Fields indicated with '*' are mandatory</p>
+            </nb-card-body>
+          </nb-card>
+
         </nb-card-body>
       </nb-card>
     </div>

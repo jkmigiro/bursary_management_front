@@ -12,8 +12,8 @@ import {faker} from '@faker-js/faker';
 import {Address} from '../../models/address.model';
 import {ApplicationService} from '../../services/application-service.service';
 import {Role} from '../../models/role.model';
-import {HttpEventType, HttpResponse} from '@angular/common/http';
 import {FileUploadService} from '../../services/file-upload.service';
+import {UserStatus} from '../../enums/user-status.enum';
 
 @Component({
   selector: 'ngx-register',
@@ -101,7 +101,7 @@ export class RegisterComponent implements OnInit {
     user.telephone = this.registerForm.get('telephone').value;
     user.dateOfBirth = this.registerForm.get('dateOfBirth').value;
     user.password = this.registerForm.get('password').value;
-    user.status = 'A';
+    user.status = UserStatus.A;
     user.occupation = this.registerForm.get('occupation').value;
     user.email = this.registerForm.get('email').value;
     user.userType = this.registerForm.get('userType').value;

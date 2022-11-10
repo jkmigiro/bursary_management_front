@@ -21,3 +21,20 @@ body:before {
   white-space: pre;
   font-family: monospace;
   content: "Errno::ENOENT: No such file or directory @ rb_sysopen - scss/style.scss"; }
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+  align-items: flex-start;
+}
+
+.radio-button {
+  margin: 5px;
+}
+.required-asterisk {
+  color: red !important;
+  font-weight: bold;
+  margin-left: 3px;
+  font-size: 1.2em;
+}

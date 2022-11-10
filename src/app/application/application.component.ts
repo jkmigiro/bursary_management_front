@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NbMenuService} from '@nebular/theme';
 import {User} from '../models/user.model';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {DayOrBoarder} from '../enums/day-or-boarding.enum';
 import {JoiningSecondaryOrContinuing} from '../enums/joining-secondary-or-continuing.enum';
 import {SchoolGrade} from '../enums/school-grade.enum';
@@ -23,6 +23,8 @@ import {Application} from '../models/application.model';
 import {ApplicationStatus} from '../enums/application-status.enum';
 import {ApplicationService} from '../services/application-service.service';
 import {WardAdministrator} from '../models/ward-administrator.model';
+import {Document} from '../models/document.model';
+import {UserRelation} from '../enums/user-relation.enum';
 
 @Component({
   selector: 'ngx-application',
@@ -34,7 +36,7 @@ export class ApplicationComponent implements OnInit {
   dayOrBoarderValues: string[] = Object.values(DayOrBoarder);
   dayOrBoarderKeys: string[] = Object.keys(DayOrBoarder);
   isJoiningSecondaryOrContinuing: string;
-  hasBenefittedFromFund: boolean;
+  hasBenefitedFromFund: boolean;
   joiningSecondaryOrContinuingKeys: string[] = Object.keys(JoiningSecondaryOrContinuing);
   joiningSecondaryOrContinuingValues: string[] = Object.values(JoiningSecondaryOrContinuing);
   schoolGrades = ApplicationConstants.SCHOOL_GRADE;
@@ -58,13 +60,6 @@ export class ApplicationComponent implements OnInit {
   favoriteSeason: string;
   seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
   JOINING_OR_CONTINUING = ApplicationConstants.JOINING_OR_CONTINUING;
-
-  goToHome() {
-    this.menuService.navigateHome();
-    const user: User = new User();
-    user.username = 'Admin';
-  }
-
 // User will be logged in student
   firstForm: FormGroup;
   secondForm: FormGroup;
@@ -87,6 +82,40 @@ export class ApplicationComponent implements OnInit {
     // super();
   }
 
+  get studentDetailsForm(): { [p: string]: AbstractControl } {
+    return this.studentDetails.controls;
+  }
+
+  get familyDetailsForm(): { [p: string]: AbstractControl } {
+    return this.familyDetails.controls;
+  }
+
+  get schoolDetailsForm(): { [p: string]: AbstractControl } {
+    return this.schoolDetails.controls;
+  }
+
+  get schoolVerificationDetailsForm(): { [p: string]: AbstractControl } {
+    return this.schoolVerificationDetails.controls;
+  }
+
+  get studentDeclarationForm(): { [p: string]: AbstractControl } {
+    return this.studentDeclaration.controls;
+  }
+
+  get joiningSecondaryDetailsForm(): { [p: string]: AbstractControl } {
+    return this.joiningSecondaryDetails.controls;
+  }
+
+  get studentDeclarationFormControl() {
+    return this.studentDeclaration.controls;
+  }
+
+  goToHome() {
+    this.menuService.navigateHome();
+    const user: User = new User();
+    user.username = 'Admin';
+  }
+
   ngOnInit() {
     this.fileInfos = this.fileUploadService.getFiles();
     this.firstForm = this.fb.group({
@@ -94,47 +123,58 @@ export class ApplicationComponent implements OnInit {
     });
 
     this.studentDetails = this.fb.group({
-      county: [''],
-      subCounty: [''],
-      wardName: [''],
-      nimsNumber: [''],
+      county: ['', [Validators.required]],
+      subCounty: ['', [Validators.required]],
+      wardName: ['', [Validators.required]],
+      nimsNumber: ['', [Validators.required, Validators.minLength(1)]],
       forNumber: [''],
       idNumber: [''],
     });
 
     this.familyDetails = this.fb.group({
-      parentOrGuardianName: [''],
+      parentOrGuardianFirstName: ['', [Validators.required]],
+      parentOrGuardianMiddleName: [''],
+      parentOrGuardianLastName: ['', [Validators.required]],
       parentOrGuardianOccupation: [''],
-      parentOrGuardianTelephone: [''],
-      familyStatus: [''],
-      grossIncomePerYear: [''],
+      parentOrGuardianTelephone: ['', [Validators.required]],
+      familyStatus: ['', [Validators.requiredTrue]],
+      grossIncomePerYear: ['', [Validators.pattern(/^[0-9]\d*$/),
+        Validators.min(1)]],
       familyIncomeDocuments: [''],
-      birthCertificate: [''],
+      birthCertificate: ['', [Validators.required]],
       otherStudentDocuments: [''],
+      userRelation: ['', [Validators.required]],
     });
 
     this.schoolDetails = this.fb.group({
-      schoolName: [''],
-      schoolStatus: [''],
-      schoolAccountNumber: [''],
-      schoolAccountName: [''],
-      schoolAccountBankBranch: [''],
+      schoolName: ['', [Validators.required]],
+      schoolStatus: ['', [Validators.requiredTrue]],
+      schoolAccountNumber: ['', [Validators.required]],
+      schoolAccountName: ['', [Validators.required]],
+      schoolAccountBankBranch: ['', [Validators.required]],
     });
 
     this.joiningSecondaryDetails = this.fb.group({
-      totalFees: [''],
-      benefittedFromFund: [''],
-      benefittedFromFundAmount: [''],
-      dayOrBoarder: [''],
-      outstandingBalance: [''],
-      feesStructure: [''],
+      totalFees: ['', [Validators.pattern(/^[0-9]\d*$/),
+        Validators.min(1)]],
+      benefitedFromFund: ['', Validators.required],
+      benefitedFromFundAmount: ['', [this.benefitedFromFundAmountValidation(), Validators.pattern(/^[0-9]\d*$/),
+        Validators.min(1),
+      ]],
+      dayOrBoarder: ['', [Validators.required]],
+      outstandingBalance: ['', [Validators.pattern(/^[0-9]\d*$/)]],
+      feesStructure: ['', [Validators.required]],
+      joiningSecondaryOrContinuing: ['', [Validators.required]],
     });
 
     this.schoolVerificationDetails = this.fb.group({
-      academicYear: [''],
-      position: [''],
-      schoolGrade: [''],
-      admissionLetter: [''],
+      academicYear: ['', [this.continuingValidation(),
+        Validators.pattern(/^[0-9]\d*$/), Validators.min(1)]],
+      position: ['', [this.continuingValidation(), Validators.pattern(/^[0-9]\d*$/),
+      , Validators.min(1)]],
+      schoolGrade: ['', [this.continuingValidation()]],
+      studentNumber: ['', this.continuingValidation()],
+      admissionLetter: ['', [this.joiningSecondaryValidation()]],
       principalComment: [''],
     });
 
@@ -143,7 +183,7 @@ export class ApplicationComponent implements OnInit {
     });
 
     this.studentDeclaration = this.fb.group({
-      studentDeclaration: ['', [Validators.required]],
+      studentDeclaration: ['', [Validators.requiredTrue]],
     });
 
     this.secondForm = this.fb.group({
@@ -165,6 +205,7 @@ export class ApplicationComponent implements OnInit {
   onWardAdministratorSubmit() {
     this.wardAdministratorForm.markAsDirty();
   }
+
   onStudentDetailsSubmit() {
     this.studentDetails.markAsDirty();
 
@@ -192,12 +233,8 @@ export class ApplicationComponent implements OnInit {
     console.log('isJoiningSecondaryOrContinuing: ', this.isJoiningSecondaryOrContinuing);
   }
 
-  get studentDeclarationFormControl() {
-    return this.studentDeclaration.controls;
-  }
-
-  changeBenefittedFromSecondary($event) {
-    this.hasBenefittedFromFund = $event.target.value;
+  changeBenefitedFromSecondary($event) {
+    this.hasBenefitedFromFund = $event.target.value;
   }
 
   applicationSubmit() {
@@ -225,17 +262,22 @@ export class ApplicationComponent implements OnInit {
     student.county.id = sd.get('county').value;
     student.subCounty = sd.get('subCounty').value;
     student.wardName = sd.get('wardName').value;
-    student.nimsNumber = sd.get('nimsNumber').value;
-    student.forNumber = sd.get('forNumber').value;
-    student.id1 = sd.get('idNumber').value;
+    student.nemisNumber = sd.get('nimsNumber').value;
+    student.forNumber = null;
+    student.id1 = null;
+    student.studentDeclaration = decl.get('studentDeclaration').value;
+    student.studentNumber = svd.get('studentNumber').value;
 
     console.log('Student= ', student);
 
-    family.name = fd.get('parentOrGuardianName').value;
+    family.firstName = fd.get('parentOrGuardianFirstName').value;
+    family.middleName = fd.get('parentOrGuardianMiddleName').value;
+    family.lastName = fd.get('parentOrGuardianLastName').value;
     family.occupation = fd.get('parentOrGuardianOccupation').value;
     family.telephone = fd.get('parentOrGuardianTelephone').value;
     family.familyStatus = fd.get('familyStatus').value;
     family.grossIncomePerYear = fd.get('grossIncomePerYear').value;
+    family.userRelation = fd.get('userRelation').value;
 
     console.log('Family= ', family);
 
@@ -248,8 +290,8 @@ export class ApplicationComponent implements OnInit {
 
     console.log('school= ', school);
     joiningSecondary.totalFees = jsd.get('totalFees').value;
-    joiningSecondary.benefittedFromFund = jsd.get('benefittedFromFund').value;
-    joiningSecondary.benefittedFromFundAmount = jsd.get('benefittedFromFundAmount').value;
+    joiningSecondary.benefitedFromFund = jsd.get('benefitedFromFund').value;
+    joiningSecondary.benefitedFromFundAmount = jsd.get('benefitedFromFundAmount').value;
     joiningSecondary.dayOrBoarder = jsd.get('dayOrBoarder').value;
     joiningSecondary.outstandingBalance = jsd.get('outstandingBalance').value;
     joiningSecondary.joiningSecondaryOrContinuing = JoiningSecondaryOrContinuing[this.isJoiningSecondaryOrContinuing];
@@ -265,23 +307,43 @@ export class ApplicationComponent implements OnInit {
     schoolVerification.grade =  svd.get('schoolGrade').value;
     // schoolVerification.principalComment = svd.get('principalComment').value;
     console.log('schoolVerification= ', schoolVerification);
-    // this.uploadFiles();
     console.log('isJoiningSecondaryOrContinuing= ', this.isJoiningSecondaryOrContinuing);
     const application: Application = new Application();
     application.applicant = student;
-    application.doneBy = null;
-    application.applicationStatus = ApplicationStatus.PENDING;
+    application.applicationStatus = this.getEnumKeyFromValue(ApplicationStatus, ApplicationStatus.PENDING);
     application.joiningSecondary = joiningSecondary;
     application.schoolVerification = schoolVerification;
+    application.documents = [];
+    this.documents.forEach((value, key) => {
+      const doc: Document = new Document();
+      doc.document = value;
+      application.documents.push(doc);
+    });
+    console.log('Documents= ', this.documents.size);
     this.applicationService.apply(application);
   }
 
   // Next we define selectFiles() method. It helps us to get the selected Files that we’re gonna upload.
+  excessFiles: boolean;
+  sizeOfSelectedFiles: number = 0;
   selectFiles(event): void {
     this.progressInfos = [];
     this.otherDocuments = event.target.files;
+    // const fileList: FileList;
 
-    console.log('Event file uploaded: ', event.target.files);
+    if (event.target.files.length <= 5) {
+      for (let i = 0; i < event.target.files.length; i++) {
+        const file = event.target.files[i];
+        this.documents.set(file.name, file);
+        console.log('Files selected= ', file);
+        this.sizeOfSelectedFiles = file.size + this.sizeOfSelectedFiles;
+      }
+    } else {
+      this.excessFiles = true;
+    }
+    this.sizeOfSelectedFiles = this.sizeOfSelectedFiles / (9.537 * 10 ^ -7);
+
+    console.log('Event file uploaded: ', event.target.files, ' size= ', this.sizeOfSelectedFiles);
   }
 
   selectFile(event, key): void {
@@ -356,6 +418,7 @@ export class ApplicationComponent implements OnInit {
       familyIncomeDocuments: '',
       birthCertificate: '',
       otherStudentDocuments: '',
+      userRelation: this.getEnumKeyFromValue(UserRelation, UserRelation.PARENT),
     };
 
     const school = {
@@ -367,11 +430,13 @@ export class ApplicationComponent implements OnInit {
     };
     const joiningSecondary = {
       totalFees: faker.seed(100000),
-      benefittedFromFund: faker.datatype.boolean(),
-      benefittedFromFundAmount: faker.seed(100000),
+      benefitedFromFund: faker.datatype.boolean(),
+      benefitedFromFundAmount: faker.seed(100000),
       dayOrBoarder: 'BOARDER',
       outstandingBalance: faker.seed(50000),
       feesStructure: null,
+      joiningSecondaryOrContinuing:
+        this.getEnumKeyFromValue(JoiningSecondaryOrContinuing, JoiningSecondaryOrContinuing.CONTINUING),
     };
     const schoolVerification = {
       academicYear: faker.seed(12),
@@ -379,12 +444,24 @@ export class ApplicationComponent implements OnInit {
       schoolGrade: 'A',
       principalComment: faker.random.alphaNumeric(100),
       admissionLetter: '',
+      studentNumber: 1,
     };
     this.studentDetails.setValue(student);
     this.familyDetails.setValue(family);
     this.schoolDetails.setValue(school);
     this.joiningSecondaryDetails.setValue(joiningSecondary);
     this.schoolVerificationDetails.setValue(schoolVerification);
+    console.log(this.getEnumKeyFromValue(UserRelation, UserRelation.PARENT), ' : ' ,
+      this.getEnumKeyFromValue(JoiningSecondaryOrContinuing, JoiningSecondaryOrContinuing.CONTINUING));
+  }
+
+  getEnumKeyFromValue(enumeration, value): any {
+    let indexOfS: any;
+    if (enumeration !== undefined && value !== undefined) {
+      indexOfS = Object.values(enumeration)
+        .indexOf(value as typeof enumeration);
+      return Object.keys(enumeration)[indexOfS];
+    }
   }
 
   getValueFromEnum(enumeration: any, valueToFind: string): any {
@@ -393,4 +470,56 @@ export class ApplicationComponent implements OnInit {
         return value;
     });
   }
+  feesStructureValidation(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+
+      if (this.isJoiningSecondaryOrContinuing !== undefined &&
+        this.isJoiningSecondaryOrContinuing === 'JOINING' && value === undefined || null) {
+        return {feesStructure: true};
+      } else {
+        return null;
+      }
+    };
+  }
+  benefitedFromFundAmountValidation(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (this.joiningSecondaryDetails !== undefined &&
+        this.joiningSecondaryDetails.get('benefitedFromFund').value === true &&
+        value === undefined
+      || value <= 0) {
+        return {benefitedFromFundAmount: true};
+      } else {
+        return null;
+      }
+    };
+  }
+  joiningSecondaryValidation(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+
+      if (value === undefined || value === null || value.length <= 0 &&
+        this.isJoiningSecondaryOrContinuing !== undefined &&
+      this.isJoiningSecondaryOrContinuing === 'JOINING') {
+        return {joiningSecondary: true};
+      } else {
+        return null;
+      }
+    };
+  }
+  continuingValidation(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+
+      if (value === undefined || value === null || value.length <= 0 &&
+        this.isJoiningSecondaryOrContinuing !== undefined &&
+        this.isJoiningSecondaryOrContinuing === 'CONTINUING') {
+        return {continuing: true};
+      } else {
+        return null;
+      }
+    };
+  }
+
 }

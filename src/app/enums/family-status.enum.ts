@@ -5,4 +5,5 @@ export enum FamilyStatus {
   DISABILITY= 'Disability',
   STREET_CHILD= 'Street Child',
   SINGLE_PARENT= 'Single Parent',
+  NORMAL = 'Normal',
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewContainerRef} from '@angular/core';
 import {LocalDataSource} from 'ng2-smart-table';
 import {SmartTableData} from '../../@core/data/smart-table';
 import {ApplicationService} from '../../services/application-service.service';
@@ -21,6 +21,7 @@ import {SchoolVerification} from '../../models/school-verification.model';
 import {SchoolGrade} from '../../enums/school-grade.enum';
 import {FinalCommitteeDeclaration} from '../../models/final-committee-declaration.model';
 import {Router} from '@angular/router';
+import {UserStatus} from '../../enums/user-status.enum';
 
 export interface PeriodicElement {
   name: string;
@@ -48,58 +49,11 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./my-applications.component.scss'],
 })
 export class MyApplicationsComponent implements OnInit {
-  applications: Application[] = [];
+  applications: any[] = [];
+  application: Application;
   user: User;
-  data = [
-    {
-      id: 4,
-      name: 'Patricia Lebsack',
-      email: 'Julianne.OConner@kory.org',
-      passed: 'Yes',
-    },
-    {
-      id: 5,
-      name: 'Chelsey Dietrich',
-      email: 'Lucio_Hettinger@annie.ca',
-      passed: 'No',
-    },
-    {
-      id: 6,
-      name: 'Mrs. Dennis Schulist',
-      email: 'Karley_Dach@jasper.info',
-      passed: 'Yes',
-    },
-    {
-      id: 7,
-      name: 'Kurtis Weissnat',
-      email: 'Telly.Hoeger@billy.biz',
-      passed: 'No',
-    },
-    {
-      id: 8,
-      name: 'Nicholas Runolfsdottir V',
-      email: 'Sherwood@rosamond.me',
-      passed: 'Yes',
-    },
-    {
-      id: 9,
-      name: 'Glenna Reichert',
-      email: 'Chaim_McDermott@dana.io',
-      passed: 'No',
-    },
-    {
-      id: 10,
-      name: 'Clementina DuBuque',
-      email: 'Rey.Padberg@karina.biz',
-      passed: 'No',
-    },
-    {
-      id: 11,
-      name: 'Nicholas DuBuque',
-      email: 'Rey.Padberg@rosamond.biz',
-      passed: 'Yes',
-    },
-  ];
+  roleNames: string [];
+  data = [];
   columns = [
     {
       columnDef: 'id',
@@ -200,26 +154,36 @@ export class MyApplicationsComponent implements OnInit {
         //   },
         // },
       },
-      passed: {
-        title: 'Passed',
-        type: 'Date',
-        filter: {
-          type: 'checkbox',
-          config: {
-            true: 'Yes',
-            false: 'No',
-            resetText: 'clear',
-          },
-        },
-        // passed: {
-        //   title: 'Date Applied',
-        //   type: 'Date',
-        // },
-        // age: {
-        //   title: 'Age',
-        //   type: 'number',
-        // },
+      applicationStatus: {
+        title: 'Status',
+        type: 'string',
+        sort: true,
       },
+      applicationDate: {
+        title: 'Application Date',
+        type: 'date',
+        sort: true,
+      },
+      // passed: {
+      //   title: 'Passed',
+      //   type: 'Date',
+      //   filter: {
+      //     type: 'checkbox',
+      //     config: {
+      //       true: 'Yes',
+      //       false: 'No',
+      //       resetText: 'clear',
+      //     },
+      //   },
+      //   // passed: {
+      //   //   title: 'Date Applied',
+      //   //   type: 'Date',
+      //   // },
+      //   // age: {
+      //   //   title: 'Age',
+      //   //   type: 'number',
+      //   // },
+      // },
     },
   };
 
@@ -231,14 +195,29 @@ export class MyApplicationsComponent implements OnInit {
     const data = this.service.getData();
     // this.data = this.service.getData();
     this.source.load(data);
-     this.applicationService.user.subscribe(next => {
-       this.user = next;
+    this.applicationService.roleNames.subscribe(next => {
+      this.roleNames = next;
     }, error => {
 
     }, () => {
 
     });
 
+  }
+
+  checkRole(roles: string[] | string): boolean {
+    // call your api to get user/account DTo for your current logged in user
+    // call your api to get user/account DTo for your current logged in user
+    // change yourAccount with your variable
+    // role/roles with your property having the role value
+    // if you have single role check, convert it to array
+    if (!Array.isArray(roles)) {
+      roles = [roles];
+    }
+    // let say you have user.roles as Array strings in your table, then do
+    return this.roleNames.some((role: string) => roles.includes(role));
+    // let say you have single role in your Db
+    // return   roles.include(yourAccount.role);
   }
 
   onDeleteConfirm(event): void {
@@ -255,11 +234,14 @@ export class MyApplicationsComponent implements OnInit {
       const role = new Role();
       role.roleName = 'USER';
 
+      const county = new County();
+      county.id = 1;
+
       const address: Address = {
         address1: faker.address.streetAddress(true),
         address2: null,
         country: new Country(),
-        county: new County(),
+        county: county,
         subCounty: faker.address.county(),
         wardName: faker.address.cityName(),
         postalCode: faker.address.secondaryAddress(),
@@ -267,14 +249,15 @@ export class MyApplicationsComponent implements OnInit {
       };
 
       const joiningSecondary: JoiningSecondary = {
-        benefittedFromFund: false,
-        benefittedFromFundAmount: faker.seed(),
+        benefitedFromFund: false,
+        benefitedFromFundAmount: faker.seed(),
         dayOrBoarder: DayOrBoarder.BOARDER,
         feesStructure: null,
         id: 0,
         joiningSecondaryOrContinuing: JoiningSecondaryOrContinuing.CONTINUING,
         outstandingBalance: faker.seed(),
         totalFees: faker.seed(),
+        application: this.application,
       };
 
       const schoolVerification: SchoolVerification = {
@@ -282,11 +265,14 @@ export class MyApplicationsComponent implements OnInit {
         admissionLetter: null,
         grade: SchoolGrade.C_PLAIN,
         id: 0,
-        joiningSecondaryOrContinuing: JoiningSecondaryOrContinuing.CONTINUING,
         position: 0,
         principalComment: 'Good boy.',
+        application: this.application,
       };
-
+      const wardAdministrator: User = new  User();
+      wardAdministrator.firstName = faker.name.firstName();
+      wardAdministrator.middleName  = faker.name.middleName();
+      wardAdministrator.lastName = faker.name.lastName();
       const finalCommitteeDeclaration: FinalCommitteeDeclaration = {
         bursaryAwarded: 0,
         fundAdminSign: undefined,
@@ -294,10 +280,13 @@ export class MyApplicationsComponent implements OnInit {
         id: 0,
         isApproved: false,
         reasons: '',
+        application: null,
+        familyStatusComment: faker.random.alphaNumeric(20),
+        wardAdministrator: wardAdministrator,
       };
       const student: Student = {
         addresses: [address],
-        county: undefined,
+        county: county,
         dateJoined: faker.date.recent(),
         dateOfBirth: faker.date.birthdate(),
         deleted: false,
@@ -309,13 +298,13 @@ export class MyApplicationsComponent implements OnInit {
         id1: 0,
         lastName: faker.name.lastName(),
         middleName: faker.name.middleName(),
-        nimsNumber: '123456789',
+        nemisNumber: '123456789',
         occupation: 'SOFTWARE ENGINEER',
         password: 'pass',
         photo: null,
         roles: [role],
         school: new School(),
-        status: 'A',
+        status: UserStatus.A,
         studentRelation: undefined,
         subCounty: 'Nairobi',
         telephone: faker.phone.number(),
@@ -323,26 +312,31 @@ export class MyApplicationsComponent implements OnInit {
         userType: Users.STUDENT,
         username: 'jkmigiro',
         wardName: 'Nairobi',
-
+        studentNumber: 1,
+        studentDeclaration: true,
       };
-      const application: Application = {
+      // id, applicant - email, name - concat, status, date
+      const application = {
         amountAwarded: 0,
         applicant: student,
-        applicationDate: faker.date.recent(),
-        applicationStatus: ApplicationStatus.PENDING,
+        applicationDate: faker.date.recent().toDateString(),
+        applicationStatus: ApplicationStatus.PENDING, // yes
         documents: [],
         doneBy: undefined,
         finalCommitteeDeclaration: finalCommitteeDeclaration,
-        id: faker.seed(100),
+        id: faker.datatype.number(100),
         joiningSecondary: joiningSecondary,
         reasons: '',
         reviewedBy: null,
         reviewedDate: null,
         schoolVerification: schoolVerification,
         type: '',
-        wardAdministrator: null,
+        name: student.firstName.trim().concat(' ', student.middleName.trim(), ' ', student.lastName).trim(),
+        email: student.email,
+        // wardAdministrator: null,
       };
       this.applications.push(application);
+      this.data.push(application);
     }
   }
 
@@ -351,12 +345,33 @@ export class MyApplicationsComponent implements OnInit {
     this.populateDummyData();
     this.displayedColumns = this.columns.map(c => c.columnDef);
     this.testDisplayedColumns = this.testColumns.map(c => c.columnDef);
+    this.applicationService.user.subscribe((value => {
+      this.user = value;
+      console.log('Application= ', value);
+    }), (error => {
+      console.error('An error has occurred: ', error);
+    }), () => {
+      console.log('Completed');
+    });
+    this.applicationService.selectedApplication.subscribe( (value => {
+      this.application = value;
+      console.log('Application= ', this.application);
+    }), error => {
+      console.log('Error= ', error);
+    }, () => {
+      console.log('Complete');
+    });
+    const val = this.user.roles.map(value => value.roleName);
+    this.checkRole(val);
   }
 
   onEdit(event): void {
     console.log('Event: ', event.data.id);
     const application = this.applications.find(((value, index) => value.id = event.data.id));
     this.applicationService.updateSelectedApplication(application);
+    console.log('On Edit= ', application);
+    console.log('School= ', application.applicant.school );
+    console.log('School Bank Account= ', application.applicant.school.bankAccount);
     this.router.navigate(['applications', event.data.id]);
   }
 

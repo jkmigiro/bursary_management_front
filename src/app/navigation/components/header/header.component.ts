@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
   user: any;
-  name;
+  name: any;
 
   themes = [
     {
@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [{title: 'Profile', link: '/profile'}, {title: 'Log out', link: '/logout'}];
+  userMenu = [{title: 'Profile', link: '/profile'}, {title: 'Log out', link: '/logout', icon: 'fa fa-sign-out'}];
 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
@@ -53,13 +53,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
-
+    this.menuService.onItemClick()
+      .subscribe((event) => {
+        this.onContextItemSelection(event.item.link);
+        if (event.item.link === '/logout') {
+          this.applicationService.logout();
+        }
+      });
     // this.userService.getUsers()
     //   .pipe(takeUntil(this.destroy$))
     //   .subscribe((users: any) => this.user = users.nick)
     this.user = this.applicationService.user.subscribe(value => {
-      this.user = value;
-      this.name = value.firstName.trim() + ' ' + value.lastName.trim();
+      // Authguard to be included
+      // if(value !== undefined) {
+      //
+      // }
+      // this.user = value;
+      // this.name = value.firstName.trim() + ' ' + value.lastName.trim();
       // console.log('Header user surname: ', this.user.lastName, ' FirstName: ', this.user.firstName);
     }, error => {
       console.log('Error', error);
@@ -102,6 +112,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   navigateHome() {
     this.menuService.navigateHome();
+    // this.menuService.navigateHome()
     return false;
+  }
+  onContextItemSelection(title) {
+    console.log('click', title);
   }
 }

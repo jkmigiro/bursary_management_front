@@ -1,5 +1,6 @@
-export class WardAdministrator {
-  public id: number;
+import {User} from './user.model';
+
+export class WardAdministrator extends User {
   public familyStatusComment: string;
-  public name: string;
+  public application: string;
 }

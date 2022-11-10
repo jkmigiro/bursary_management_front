@@ -15,7 +15,7 @@ export class User {
   public telephone: string = null;
   public dateOfBirth: Date = null;
   public password: string = null;
-  public status: string = null; // OK Inactive when user first signs up
+  public status: UserStatus = null; // OK Inactive when user first signs up
   public dateJoined: Date = null;  // OK CurrentDate, SPRING
   public occupation: string = null; // OK YET, IF user Type is parent or guardian
   public email: string = null; // OK for SignUp and Login

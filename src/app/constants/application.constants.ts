@@ -292,6 +292,10 @@ export class ApplicationConstants {
       key: 'SINGLE_PARENT',
       value: 'Single Parent',
     },
+    {
+      key: 'NORMAL',
+      value: 'Normal',
+    },
   ];
   static GENDER = [
     {
