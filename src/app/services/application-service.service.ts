@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
 import {Application} from '../models/application.model';
 import {map} from 'rxjs/operators';
 import {BehaviorSubject, Observable, throwError} from 'rxjs';
@@ -26,6 +26,8 @@ import {FamilyStatus} from '../enums/family-status.enum';
 import {Student} from '../models/student.model';
 import {Router} from '@angular/router';
 import {UserRelation} from '../enums/user-relation.enum';
+import {StudentRelation} from '../models/student-relation.model';
+import {ReportRequest} from '../models/report-request.model';
 
 
 @Injectable({
@@ -44,6 +46,8 @@ export class ApplicationService {
   roleNames: Observable< string[]>;
   applicant: Student;
   application: Application;
+  applicationsSubject: BehaviorSubject<Application[]>;
+  applications: Observable<Application[]>;
   constructor(private http: HttpClient,
               private router: Router) {
     this.userSubject = new BehaviorSubject<User>(
@@ -56,7 +60,8 @@ export class ApplicationService {
     this.selectedApplication = this.selectedApplicationSubject.asObservable();
     this.roleNameSubject = new BehaviorSubject<string[]>([]);
     this.roleNames = this.roleNameSubject.asObservable();
-    this.initApplication();
+    this.applicationsSubject = new BehaviorSubject<Application[]>([]);
+    // this.initApplication();
   }
   public get userValue(): User {
     return this.userSubject.value;
@@ -110,6 +115,9 @@ export class ApplicationService {
         }),
       );
   }
+  isAuthenticated(): boolean {
+    return localStorage.getItem('currentUser') !== null;
+  }
 
   logout() {
     localStorage.removeItem('currentUser');
@@ -123,7 +131,7 @@ export class ApplicationService {
     return this.loggedIn;
   }
 
-  apply(application: Application) {
+  apply(application: Application): Observable<Application> {
     const formData = new FormData();
     console.log('Documents= ', application.documents);
     const files: File[] = [];
@@ -150,19 +158,12 @@ export class ApplicationService {
     // };
     // Access-Control-Allow-Origin
     console.log('Application= ', application);
-    this.http.post<Application>(this.url + '/application' , formData)
-      .pipe()
-      .subscribe(
-        (val) => {
-          console.log('POST call successful value returned in body',
-            val);
-        },
-        response => {
-          console.log('POST call in error', response);
-        },
-        () => {
-          console.log('The POST observable is now completed.');
-        });
+    return this.http.post<Application>(this.url + '/application' , formData);
+  }
+  updateApplication(application: Application): Observable<Application> {
+    const headers: HttpHeaders = new HttpHeaders()
+      .set('Access-Control-Allow-Origin', 'http://localhost:8080/');
+    return this.http.put<Application>(this.url + '/application/review/5', application, {headers});
   }
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
@@ -195,6 +196,30 @@ export class ApplicationService {
     console.log('Application: ', application);
     this.selectedApplicationSubject.next(application);
   }
+  getApplicationsByUserId(): Observable<Application[]> {
+    let user: User;
+    this.user.subscribe(value => {
+      user = value;
+    }, error => console.log('Error getting user: ', error));
+    console.log('User ID when retrieving their applications= ', user.id);
+    return this.http.get<Application[]>(ApplicationConstants.URL + '/application/user/' + user.id);
+  }
+
+  getReport(reportRequest?: ReportRequest ): any {
+    const params = new HttpParams();
+    console.log('ReportRequest= ', reportRequest);
+    params.append('reportName', reportRequest.reportName);
+    params.append('id', reportRequest.id);
+    params.append('applicationStatus', reportRequest.applicationStatus);
+    const queryParams = {'reportName': reportRequest.reportName , 'id': reportRequest.id,
+      'applicationStatus': reportRequest.applicationStatus};
+    console.log('Params= ', params, ' Quuery Params= ', queryParams);
+
+    return this.http.get(ApplicationConstants.URL + '/reports',
+      {params: queryParams, responseType: 'blob' , observe: 'response'});
+  }
+
+
   initApplication(): void {
     const role: Role = {
       description: 'MANAGER', id: 0, roleName: 'MANAGER',
@@ -209,7 +234,6 @@ export class ApplicationService {
       accountBranch: faker.finance.account(),
       accountName: faker.finance.accountName(),
       accountNumber: faker.finance.creditCardNumber(),
-      bank: bank,
       id: 0};
 
     const school: School = {
@@ -227,7 +251,7 @@ export class ApplicationService {
       firstName: 'Jasper',
       forNumber: faker.seed(),
       gender: Gender.M,
-      id: faker.seed(),
+      id: 5,
       id1: faker.seed(),
       lastName: 'Migiro',
       middleName: 'Keraita',
@@ -238,7 +262,6 @@ export class ApplicationService {
       roles: [role],
       school: school,
       status: UserStatus.A,
-      studentRelation: undefined,
       subCounty: 'Kitengela East',
       telephone: faker.phone.number(),
       userRelations: [],
@@ -304,9 +327,11 @@ export class ApplicationService {
       reviewedDate: new Date(),
       schoolVerification: schoolVerification,
       type: faker.random.alphaNumeric(10),
+      studentRelations: [],
     };
 
-    this.applicant.studentRelation = {
+    this.application.studentRelations = [];
+    const studentRelation: StudentRelation = {
       familyStatus: FamilyStatus.NORMAL,
       grossIncomePerYear: faker.seed(100000),
       id: 0,
@@ -317,7 +342,9 @@ export class ApplicationService {
       telephone: faker.phone.number(),
       student: this.applicant,
       userRelation: UserRelation.PARENT,
+      application: this.application,
     };
+    this.application.studentRelations.push(studentRelation);
     this.selectedApplicationSubject.next(this.application);
   }
 

@@ -5,5 +5,5 @@ export class BankAccount {
   public accountNumber: string;
   public accountName: string;
   public accountBranch: string;
-  public bank: Bank;
+  // public bank: Bank;
 }

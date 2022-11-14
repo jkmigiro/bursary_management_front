@@ -55,6 +55,9 @@ import { AppDetailsManagerComponent } from './components/application-details/app
 import { AppDetailsComponent } from './components/application-details/app-details/app-details.component';
 import { MarkAsteriskDirective } from './directives/mark-asterisk.directive';
 import { LogoutComponent } from './components/logout/logout.component';
+import { DialogComponent } from './components/dialog/dialog.component';
+import { ReportsComponent } from './components/reports/reports.component';
+import { ReportsDialogComponent } from './components/reports-dialog/reports-dialog.component';
 
 @NgModule({
   declarations: [AppComponent,
@@ -79,7 +82,10 @@ import { LogoutComponent } from './components/logout/logout.component';
     AppDetailsManagerComponent,
     AppDetailsComponent,
     MarkAsteriskDirective,
-    LogoutComponent],
+    LogoutComponent,
+    DialogComponent,
+    ReportsComponent,
+    ReportsDialogComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

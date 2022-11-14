@@ -12,7 +12,6 @@ export class Student extends User {
     public forNumber: number; // Personal
     public id1: number; // Personal
     public studentNumber: number; // When Joining Secondary
-    public studentRelation: StudentRelation; // Personal bado
     public county: County = null;
     public subCounty: string = null;
     public wardName: string;

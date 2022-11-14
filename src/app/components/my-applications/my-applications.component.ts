@@ -194,7 +194,6 @@ export class MyApplicationsComponent implements OnInit {
               private router: Router) {
     const data = this.service.getData();
     // this.data = this.service.getData();
-    this.source.load(data);
     this.applicationService.roleNames.subscribe(next => {
       this.roleNames = next;
     }, error => {
@@ -305,7 +304,6 @@ export class MyApplicationsComponent implements OnInit {
         roles: [role],
         school: new School(),
         status: UserStatus.A,
-        studentRelation: undefined,
         subCounty: 'Nairobi',
         telephone: faker.phone.number(),
         userRelations: [],
@@ -342,25 +340,47 @@ export class MyApplicationsComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataSource = ELEMENT_DATA;
-    this.populateDummyData();
+    // this.populateDummyData();
     this.displayedColumns = this.columns.map(c => c.columnDef);
     this.testDisplayedColumns = this.testColumns.map(c => c.columnDef);
     this.applicationService.user.subscribe((value => {
       this.user = value;
-      console.log('Application= ', value);
+      console.log('User in MyApplications= ', value);
     }), (error => {
       console.error('An error has occurred: ', error);
     }), () => {
       console.log('Completed');
     });
-    this.applicationService.selectedApplication.subscribe( (value => {
-      this.application = value;
-      console.log('Application= ', this.application);
-    }), error => {
-      console.log('Error= ', error);
-    }, () => {
-      console.log('Complete');
-    });
+    // this.applicationService.selectedApplication.subscribe( (value => {
+    //   this.application = value;
+    //   console.log('Application= ', this.application);
+    // }), error => {
+    //   console.log('Error= ', error);
+    // }, () => {
+    //   console.log('Complete');
+    // });
+    this.applicationService.getApplicationsByUserId().subscribe(
+      value => {
+        if ( value !== null) {
+          this.applications = value;
+          value.forEach(value1 => {
+            console.log('App data... ', value1);
+            const app: any = {};
+            app.id = value1.id;
+            app.name = value1.applicant.firstName.trim().concat(' ', value1.applicant.middleName.trim(),
+              ' ', value1.applicant.lastName).trim();
+            app.email = value1.applicant.email;
+            app.applicationStatus = value1.applicationStatus;
+            app.applicationDate = new Date(value1.applicationDate).toLocaleDateString('en-GB');
+            console.log('App= ', app, ' Faker Date= ', faker.date.recent());
+            this.data.push(app);
+          });
+        }
+        this.source.load(this.data);
+      }, error => {
+        console.log('Error occurred getting applications by userId: ', error);
+      }, () => console.log('Successfully got applications by userID'),
+    );
     const val = this.user.roles.map(value => value.roleName);
     this.checkRole(val);
   }
@@ -368,11 +388,15 @@ export class MyApplicationsComponent implements OnInit {
   onEdit(event): void {
     console.log('Event: ', event.data.id);
     const application = this.applications.find(((value, index) => value.id = event.data.id));
-    this.applicationService.updateSelectedApplication(application);
-    console.log('On Edit= ', application);
-    console.log('School= ', application.applicant.school );
-    console.log('School Bank Account= ', application.applicant.school.bankAccount);
-    this.router.navigate(['applications', event.data.id]);
+
+    if (application !== undefined ) {
+      this.applicationService.updateSelectedApplication(application);
+      console.log('On Edit= ', application);
+      // console.log('School= ', application.applicant.school );
+      // console.log('School Bank Account= ', application.applicant.school.bankAccount);
+      this.router.navigate(['applications', event.data.id]);
+    }
+    console.log('Application= ', application);
   }
 
 }

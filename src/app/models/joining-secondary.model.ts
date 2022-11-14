@@ -1,6 +1,7 @@
 import {DayOrBoarder} from '../enums/day-or-boarding.enum';
 import {JoiningSecondaryOrContinuing} from '../enums/joining-secondary-or-continuing.enum';
 import {Application} from './application.model';
+import {Document} from './document.model';
 
 export class JoiningSecondary {
 
@@ -11,6 +12,6 @@ export class JoiningSecondary {
   public benefitedFromFundAmount: number;
   public dayOrBoarder: DayOrBoarder = null;
   public totalFees: number = null;
-  public feesStructure: File = null;
+  public feesStructure: Document = null;
   public joiningSecondaryOrContinuing: JoiningSecondaryOrContinuing = null;
 }

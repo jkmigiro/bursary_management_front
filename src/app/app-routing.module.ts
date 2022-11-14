@@ -16,6 +16,7 @@ import {AboutComponent} from './components/about/about.component';
 import {HomeComponent} from './components/home/home.component';
 import {ContactsComponent} from './components/contacts/contacts.component';
 import {ApplyingComponent} from './components/applying/applying.component';
+import {AuthGuard} from './services/auth-guard.service';
 
 export const routes: Routes = [
 
@@ -81,6 +82,7 @@ export const routes: Routes = [
     path: '',
     loadChildren: () => import('./pages/pages.module')
       .then(m => m.PagesModule),
+    canActivateChild: [AuthGuard],
   },
   // { path: '', redirectTo: 'pages', pathMatch: 'full' },
   // { path: '**', redirectTo: 'pages' },

@@ -9,36 +9,39 @@
               Student Personal Details
             </nb-card-header>
             <nb-card-body>
-              <form (ngSubmit)="onStudentDetailsSubmit()" [formGroup]="studentDetails">
+              <form #form="ngForm" (ngSubmit)="onStudentDetailsSubmit()" [formGroup]="studentDetails">
                 <!--                Currently logged in student user will be the one in session-->
                 <!--                All that is needed is the application details to be submitted-->
                 <div class="form-group">
                   <!--                  List-->
-                  <p class="label">County</p>
-                  <nb-select formControlName="county" id="county">
+                  <p class="label"  ngxMarkAsterisk>County</p>
+                  <nb-select [disabled]="studentsOnly || approvedOrRejected" formControlName="county" id="county">
                     <nb-option *ngFor="let value of counties;" [value]="value.id">{{value.name}}</nb-option>
                   </nb-select>
-                  <ng-container *ngIf="studentDetailsForm.county.touched && studentDetailsForm.county.invalid">
+                  <ng-container *ngIf="studentDetailsForm.county.touched && studentDetailsForm.county.invalid && !studentsOnly ||
+                   (submitted && studentDetailsForm.county.invalid)">
                     <p *ngIf="studentDetailsForm.county.errors.required" class="caption status-danger">
                       Select a County!
                     </p>
                   </ng-container>
                 </div>
                 <div class="form-group">
-                  <label class="label" for="subCounty">Sub-County</label>
-                  <input formControlName="subCounty" fullWidth id="subCounty" nbInput placeholder="Sub County" type="text">
+                  <label class="label" ngxMarkAsterisk for="subCounty">Sub-County</label>
+                  <input formControlName="subCounty" [attr.disabled]="studentsOnly || approvedOrRejected" fullWidth id="subCounty" nbInput placeholder="Sub County" type="text">
 
-                  <ng-container *ngIf="studentDetailsForm.subCounty.touched && studentDetailsForm.subCounty.invalid">
+                  <ng-container *ngIf="studentDetailsForm.subCounty.touched && studentDetailsForm.subCounty.invalid && !studentsOnly ||
+                   (submitted && studentDetailsForm.subCounty.invalid)">
                     <p *ngIf="studentDetailsForm.subCounty.errors.required" class="caption status-danger">
                       Sub-County is required!
                     </p>
                   </ng-container>
                 </div>
                 <div class="form-group">
-                  <label class="label" for="wardName">Ward Name</label>
-                  <input formControlName="wardName" fullWidth id="wardName" nbInput placeholder="Ward Name" type="text">
+                  <label class="label" ngxMarkAsterisk for="wardName">Ward Name</label>
+                  <input formControlName="wardName" [attr.disabled]="studentsOnly || approvedOrRejected" fullWidth id="wardName" nbInput placeholder="Ward Name" type="text">
 
-                  <ng-container *ngIf="studentDetailsForm.wardName.touched && studentDetailsForm.wardName.invalid">
+                  <ng-container *ngIf="studentDetailsForm.wardName.touched && studentDetailsForm.wardName.invalid && !studentsOnly ||
+                   (submitted && studentDetailsForm.wardName.invalid)">
                     <p *ngIf="studentDetailsForm.wardName.errors.required" class="caption status-danger">
                       Ward Name is required!
                     </p>
@@ -46,9 +49,10 @@
 
                 </div>
                 <div class="form-group">
-                  <label class="label" for="nimsNumber">NIIMS Number</label>
-                  <input formControlName="nimsNumber" fullWidth id="nimsNumber" nbInput placeholder="NIIMS Number" type="text">
-                  <ng-container *ngIf="studentDetailsForm.nimsNumber.touched && studentDetailsForm.nimsNumber.invalid">
+                  <label class="label" ngxMarkAsterisk for="nimsNumber">NIIMS Number</label>
+                  <input formControlName="nimsNumber" [attr.disabled]="studentsOnly || approvedOrRejected" fullWidth id="nimsNumber" nbInput placeholder="NIIMS Number" type="text">
+                  <ng-container *ngIf="studentDetailsForm.nimsNumber.touched && studentDetailsForm.nimsNumber.invalid && !studentsOnly ||
+                   (submitted && studentDetailsForm.nimsNumber.invalid)">
                     <p *ngIf="studentDetailsForm.nimsNumber.errors.required" class="caption status-danger">
                       NIIMS Number is required!
                     </p>
@@ -74,26 +78,89 @@
             <nb-card-body>
               <form (ngSubmit)="onFamilyDetailsSubmit()" [formGroup]="familyDetails">
                 <div class="form-group">
-                  <label class="label" for="parentOrGuardianName">Parent/Guardian Name</label>
-                  <input formControlName="parentOrGuardianName" fullWidth id="parentOrGuardianName" nbInput placeholder="" type="text">
+                  <label for="userRelation" ngxMarkAsterisk class="label">Parent or Guardian
+                  </label>
+                  <nb-radio-group [disabled]="studentsOnly || approvedOrRejected" id="userRelation" formControlName="userRelation">
+                    <nb-radio
+                      value="PARENT">
+                      Parent
+                    </nb-radio>
+                    <nb-radio value="GUARDIAN">
+                      Guardian
+                    </nb-radio>
+                  </nb-radio-group>
+                  <ng-container *ngIf="familyDetailsForm.userRelation.touched && familyDetailsForm.userRelation.invalid && !studentsOnly ||
+                   (submitted && familyDetailsForm.userRelation.invalid)">
+                    <p class="caption status-danger" *ngIf="familyDetailsForm.userRelation.errors.required">
+                      Indicate if it is a Parent or Guardian!
+                    </p>
+                  </ng-container>
                 </div>
+                <div class="form-group">
+                  <label class="label" for="parentOrGuardianFirstName">Parent/Guardian First Name</label>
+                  <input [attr.disabled]="studentsOnly || approvedOrRejected" formControlName="parentOrGuardianFirstName" fullWidth id="parentOrGuardianFirstName" nbInput placeholder="" type="text">
+                  <ng-container *ngIf="familyDetailsForm.parentOrGuardianFirstName.touched && familyDetailsForm.parentOrGuardianFirstName.invalid && !studentsOnly ||
+                   (submitted && familyDetailsForm.parentOrGuardianFirstName.invalid)">
+                  <p *ngIf="familyDetailsForm.parentOrGuardianFirstName.errors.required" class="caption status-danger">
+                    Parent or Guardian First Name is required!
+                  </p>
+                  </ng-container>
+                </div>
+                <div class="form-group">
+                  <label class="label" for="parentOrGuardianMiddleName">Parent/Guardian Middle Name</label>
+                  <input [attr.disabled]="studentsOnly || approvedOrRejected" formControlName="parentOrGuardianMiddleName" fullWidth id="parentOrGuardianMiddleName" nbInput placeholder="" type="text">
+                </div>
+                <div class="form-group">
+                  <label class="label" for="parentOrGuardianLastName">Parent/Guardian Last Name</label>
+                  <input [attr.disabled]="studentsOnly || approvedOrRejected" formControlName="parentOrGuardianLastName" fullWidth id="parentOrGuardianLastName" nbInput placeholder="" type="text">
+                  <ng-container *ngIf="familyDetailsForm.parentOrGuardianLastName.touched && familyDetailsForm.parentOrGuardianLastName.invalid && !studentsOnly ||
+                   (submitted && familyDetailsForm.parentOrGuardianLastName.invalid)">
+                    <p *ngIf="familyDetailsForm.parentOrGuardianLastName.errors.required" class="caption status-danger">
+                      Parent or Guardian Last Name is required!
+                    </p>
+                  </ng-container>
+                </div>
+
                 <div class="form-group">
                   <label class="label" for="parentOrGuardianOccupation">Parent/Guardian Occupation</label>
-                  <input formControlName="parentOrGuardianOccupation" fullWidth id="parentOrGuardianOccupation" nbInput placeholder="" type="text">
+                  <input [attr.disabled]="studentsOnly || approvedOrRejected" formControlName="parentOrGuardianOccupation" fullWidth id="parentOrGuardianOccupation" nbInput placeholder="" type="text">
                 </div>
+
                 <div class="form-group">
                   <label class="label" for="parentOrGuardianTelephone">Parent/Guardian Telephone</label>
-                  <input formControlName="parentOrGuardianTelephone" fullWidth id="parentOrGuardianTelephone" nbInput placeholder="" type="text">
+                  <input [attr.disabled]="studentsOnly || approvedOrRejected" formControlName="parentOrGuardianTelephone" fullWidth id="parentOrGuardianTelephone" nbInput placeholder="" type="text">
+                  <ng-container *ngIf="familyDetailsForm.parentOrGuardianTelephone.touched && familyDetailsForm.parentOrGuardianTelephone.invalid && !studentsOnly ||
+                   (submitted && familyDetailsForm.parentOrGuardianTelephone.invalid)">
+                    <p *ngIf="familyDetailsForm.parentOrGuardianTelephone.errors.required" class="caption status-danger">
+                      Parent or Guardian Telephone is required!
+                    </p>
+                    <p *ngIf="familyDetailsForm.parentOrGuardianTelephone.errors.pattern" class="caption status-danger">
+                      Not a valid phone number!
+                    </p>
+                  </ng-container>
                 </div>
+
                 <div class="form-group">
                   <p class="label">Family Status</p>
-                  <nb-select [selected]="selectedFamilyStatus" formControlName="familyStatus" id="familyStatus">
+                  <nb-select [disabled]="studentsOnly || approvedOrRejected" formControlName="familyStatus" id="familyStatus">
                     <nb-option *ngFor="let status of familyStatuses" [value]="status.key">{{status.value}}</nb-option>
                   </nb-select>
+                  <ng-container *ngIf="familyDetailsForm.familyStatus.touched && familyDetailsForm.familyStatus.invalid && !studentsOnly ||
+                   (submitted && familyDetailsForm.familyStatus.invalid)">
+                    <p *ngIf="familyDetailsForm.familyStatus.errors.required" class="caption status-danger">
+                      Family status is required!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
                   <label class="label" for="grossIncomePerYear">Gross Income Per Year</label>
-                  <input formControlName="grossIncomePerYear" fullWidth id="grossIncomePerYear" nbInput placeholder="" type="text">
+                  <input [attr.disabled]="studentsOnly || approvedOrRejected" formControlName="grossIncomePerYear" fullWidth id="grossIncomePerYear" nbInput placeholder="" type="text">
+                  <ng-container *ngIf="familyDetailsForm.grossIncomePerYear.touched && familyDetailsForm.grossIncomePerYear.invalid && !studentsOnly ||
+                   (submitted && familyDetailsForm.grossIncomePerYear.invalid)">
+                    <p *ngIf="familyDetailsForm.grossIncomePerYear.errors.pattern" class="caption status-danger">
+                      Not a valid number!
+                    </p>
+                  </ng-container>
                 </div>
               </form>
             </nb-card-body>
@@ -111,27 +178,57 @@
               <form (ngSubmit)="onSchoolDetailsSubmit()" [formGroup]="schoolDetails" >
                 <div class="form-group">
                   <label class="label" for="schoolName">Name of School</label>
-                  <input formControlName="schoolName" fullWidth id="schoolName" nbInput placeholder="Name of School" type="text">
+                  <input [attr.disabled]="studentsOnly || approvedOrRejected"  formControlName="schoolName" fullWidth id="schoolName" nbInput placeholder="Name of School" type="text">
+                  <ng-container *ngIf="schoolDetailsForm.schoolName.touched && schoolDetailsForm.schoolName.invalid && !studentsOnly ||
+                   (submitted && schoolDetailsForm.schoolName.invalid)">
+                    <p *ngIf="schoolDetailsForm.schoolName.errors.required" class="caption status-danger">
+                      Name of school is required!
+                    </p>
+                  </ng-container>
                 </div>
 
                 <div class="form-group">
                   <p class="label">School Status</p>
-                  <nb-select formControlName="schoolStatus" id="schoolStatus">
+                  <nb-select [disabled]="studentsOnly || approvedOrRejected" formControlName="schoolStatus" id="schoolStatus">
                     <nb-option *ngFor="let status of schoolStatuses" [value]="status.key">{{status.value}}</nb-option>
                   </nb-select>
+                  <ng-container *ngIf="schoolDetailsForm.schoolStatus.touched && schoolDetailsForm.schoolStatus.invalid && !studentsOnly ||
+                   (submitted && schoolDetailsForm.schoolStatus.invalid)">
+                    <p *ngIf="schoolDetailsForm.schoolStatus.errors.required" class="caption status-danger">
+                      School status is required!
+                    </p>
+                  </ng-container>
                 </div>
                 <!--                Start of school bank account details-->
                 <div class="form-group">
                   <label class="label" for="schoolAccountNumber">School Account Number</label>
-                  <input formControlName="schoolAccountNumber" fullWidth id="schoolAccountNumber" nbInput placeholder="School Account Number" type="text">
+                  <input [attr.disabled]="studentsOnly || approvedOrRejected"  formControlName="schoolAccountNumber" fullWidth id="schoolAccountNumber" nbInput placeholder="School Account Number" type="text">
+                  <ng-container *ngIf="schoolDetailsForm.schoolAccountNumber.touched && schoolDetailsForm.schoolAccountNumber.invalid && !studentsOnly ||
+                   (submitted && schoolDetailsForm.schoolAccountNumber.invalid)">
+                    <p *ngIf="schoolDetailsForm.schoolAccountNumber.errors.required" class="caption status-danger">
+                      School Account Number is required!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
                   <label class="label" for="schoolAccountName">School Account Name</label>
-                  <input formControlName="schoolAccountName" fullWidth id="schoolAccountName" nbInput placeholder="School Account Name" type="text">
+                  <input  [attr.disabled]="studentsOnly || approvedOrRejected" formControlName="schoolAccountName" fullWidth id="schoolAccountName" nbInput placeholder="School Account Name" type="text">
+                  <ng-container *ngIf="schoolDetailsForm.schoolAccountName.touched && schoolDetailsForm.schoolAccountName.invalid && !studentsOnly ||
+                   (submitted && schoolDetailsForm.schoolAccountName.invalid)">
+                    <p *ngIf="schoolDetailsForm.schoolAccountName.errors.required" class="caption status-danger">
+                      School Account Name is required!
+                    </p>
+                  </ng-container>
                 </div>
                 <div class="form-group">
                   <label class="label" for="schoolAccountBankBranch">School Account Bank Branch</label>
-                  <input formControlName="schoolAccountBankBranch" fullWidth id="schoolAccountBankBranch" nbInput placeholder="School Account Bank Branch" type="text">
+                  <input [attr.disabled]="studentsOnly || approvedOrRejected"  formControlName="schoolAccountBankBranch" fullWidth id="schoolAccountBankBranch" nbInput placeholder="School Account Bank Branch" type="text">
+                  <ng-container *ngIf="schoolDetailsForm.schoolAccountBankBranch.touched && schoolDetailsForm.schoolAccountBankBranch.invalid && !studentsOnly ||
+                   (submitted && schoolDetailsForm.schoolAccountBankBranch.invalid)">
+                    <p *ngIf="schoolDetailsForm.schoolAccountBankBranch.errors.required" class="caption status-danger">
+                      School Account Bank Branch is required!
+                    </p>
+                  </ng-container>
                 </div>
 
                 <!--              End of school details-->
@@ -142,21 +239,21 @@
 
           <nb-card>
             <nb-card-body>
-              <form>
+              <form [formGroup]="joiningSecondaryDetails">
                 <div class="form-group">
                   <label class="label" for="joiningSecondary">Are you Joining Secondary or Continuing</label>
-                  <nb-radio-group [(value)]="joiningSecondaryOrContinuing" id="joiningSecondary">
-                    <nb-radio *ngFor="let val of JOINING_OR_CONTINUING"  [checked]="joiningSecondaryOrContinuing == val.key"  [value]="val.key"
+                  <nb-radio-group [disabled]="studentsOnly || approvedOrRejected" formControlName="joiningSecondaryOrContinuing" [(value)]="joiningSecondaryOrContinuing" id="joiningSecondary">
+                    <nb-radio *ngFor="let val of JOINING_OR_CONTINUING" [value]="val.key"
                     >
                       {{val.value}}
                     </nb-radio>
                   </nb-radio-group>
-                  <!--            <div>Your favorite season is: {{isJoiningSecondaryOrContinuing}}</div>-->
-                </div>
-                <div>
-                  <p>
-                    I am {{joiningSecondaryOrContinuing}}
-                  </p>
+                  <ng-container *ngIf="joiningSecondaryDetailsForm.joiningSecondaryOrContinuing.touched && joiningSecondaryDetailsForm.joiningSecondaryOrContinuing.invalid && !studentsOnly ||
+                   (submitted && joiningSecondaryDetailsForm.joiningSecondaryOrContinuing.invalid)">
+                    <p *ngIf="joiningSecondaryDetailsForm.joiningSecondaryOrContinuing.errors.required" class="caption status-danger">
+                      State whether you are Joining Secondary or Continuing!
+                    </p>
+                  </ng-container>
                 </div>
               </form>
             </nb-card-body>
@@ -169,34 +266,70 @@
          <nb-card-body>
            <form (ngSubmit)="onJoiningSecondaryDetailsSubmit()" *ngIf="isJoiningSecondaryOrContinuing == 'JOINING' || 'CONTINUING'" [formGroup]="joiningSecondaryDetails">
              <div class="form-group">
-               <label class="label" for="totalFees">Total Fees (per year)</label>
-               <input formControlName="totalFees" fullWidth id="totalFees" nbInput type="number">
+               <label  class="label" for="totalFees">Total Fees (per year)</label>
+               <input [attr.disabled]="studentsOnly || approvedOrRejected" formControlName="totalFees" fullWidth id="totalFees" nbInput type="text">
+               <ng-container *ngIf="joiningSecondaryDetailsForm.totalFees.touched && joiningSecondaryDetailsForm.totalFees.invalid && !studentsOnly ||
+                   (submitted && joiningSecondaryDetailsForm.totalFees.invalid)">
+                 <p *ngIf="joiningSecondaryDetailsForm.totalFees.errors.pattern" class="caption status-danger">
+                   Not a valid number!
+                 </p>
+                 <p *ngIf="joiningSecondaryDetailsForm.totalFees.errors.min" class="caption status-danger">
+                   Total Fees cannot be a negative number!
+                 </p>
+               </ng-container>
              </div>
              <div class="form-group">
                <label class="label" for="outstandingBalance">Outstanding Balance</label>
-               <input formControlName="outstandingBalance" fullWidth id="outstandingBalance" nbInput placeholder="" type="number">
+               <input  [attr.disabled]="studentsOnly || approvedOrRejected" formControlName="outstandingBalance" fullWidth id="outstandingBalance" nbInput placeholder="" type="text">
+               <ng-container *ngIf="joiningSecondaryDetailsForm.outstandingBalance.touched && joiningSecondaryDetailsForm.outstandingBalance.invalid && !studentsOnly ||
+                   (submitted && joiningSecondaryDetailsForm.outstandingBalance.invalid)">
+                 <p *ngIf="joiningSecondaryDetailsForm.outstandingBalance.errors.pattern" class="caption status-danger">
+                   Not a valid number!
+                 </p>
+               </ng-container>
              </div>
            </form>
            <form [formGroup]="joiningSecondaryDetails">
              <div class="form-group">
                <label class="label" for="benefitedFromFund">Have you ever benefited from the county bursary fund</label>
-               <nb-radio-group  [(value)]="hasBenefitedFromFund" formControlName="benefitedFromFund" id="benefitedFromFund">
-                 <nb-radio *ngFor="let value of benefitedFromFundValues"  [checked]="application.joiningSecondary.benefitedFromFund === value" [value]="value">
+               <nb-radio-group  [disabled]="studentsOnly || approvedOrRejected" [(value)]="hasBenefitedFromFund" formControlName="benefitedFromFund" id="benefitedFromFund">
+                 <nb-radio *ngFor="let value of benefitedFromFundValues"  [checked]="hasBenefitedFromFund === value" [value]="value">
                    {{value}}
                  </nb-radio>
                </nb-radio-group>
+               <ng-container *ngIf="joiningSecondaryDetailsForm.benefitedFromFund.touched && joiningSecondaryDetailsForm.benefitedFromFund.invalid && !studentsOnly ||
+                   (submitted && joiningSecondaryDetailsForm.benefitedFromFund.invalid)">
+                 <p *ngIf="joiningSecondaryDetailsForm.benefitedFromFund.errors.required" class="caption status-danger">
+                   State whether you have benefited from the bursary fund before!
+                 </p>
+               </ng-container>
              </div>
              <div *ngIf="hasBenefitedFromFund" class="form-group">
                <label class="label" for="benefitedFromFundAmount">Benefited From Fund amount</label>
-               <input formControlName="benefitedFromFundAmount" fullWidth id="benefitedFromFundAmount" nbInput placeholder="" type="number">
+               <input [attr.disabled]="studentsOnly || approvedOrRejected" formControlName="benefitedFromFundAmount" fullWidth id="benefitedFromFundAmount" nbInput placeholder="" type="text">
+               <ng-container *ngIf="joiningSecondaryDetailsForm.benefitedFromFundAmount.touched && joiningSecondaryDetailsForm.benefitedFromFundAmount.invalid && !studentsOnly ||
+                   (submitted && joiningSecondaryDetailsForm.benefitedFromFundAmount.invalid)">
+                 <p *ngIf="joiningSecondaryDetailsForm.benefitedFromFundAmount.errors.pattern" class="caption status-danger">
+                   Not a valid number!
+                 </p>
+                 <p *ngIf="joiningSecondaryDetailsForm.benefitedFromFundAmount.errors.min" class="caption status-danger">
+                   Benefited from fund amount cannot be a negative number!
+                 </p>
+               </ng-container>
              </div>
            </form>
            <form  [formGroup]="joiningSecondaryDetails">
              <div class="form-group">
                <label class="label" for="dayOrBoarder">Are you a Day Scholar or a Boarder?</label>
-               <nb-radio-group [(value)]="dayOrBoarderValue" formControlName="dayOrBoarder" id="dayOrBoarder" >
+               <nb-radio-group [disabled]="studentsOnly || approvedOrRejected" [(value)]="dayOrBoarderChecked" formControlName="dayOrBoarder" id="dayOrBoarder" >
                  <nb-radio  *ngFor="let value of dayOrBoarder" [value]="value.key">{{value.value}}</nb-radio>
                </nb-radio-group>
+               <ng-container *ngIf="joiningSecondaryDetailsForm.dayOrBoarder.touched && joiningSecondaryDetailsForm.dayOrBoarder.invalid && !studentsOnly ||
+                   (submitted && joiningSecondaryDetailsForm.dayOrBoarder.invalid)">
+                 <p *ngIf="joiningSecondaryDetailsForm.dayOrBoarder.errors.required" class="caption status-danger">
+                   State whether you are a Day Scholar or Boarder!
+                 </p>
+               </ng-container>
              </div>
            </form>
          </nb-card-body>
@@ -213,37 +346,58 @@
                 <ng-container>
                   <div class="form-group">
                     <label class="label" for="academicYear">Academic Year</label>
-                    <input formControlName="academicYear" fullWidth id="academicYear" nbInput placeholder="" type="number">
+                    <input [attr.disabled]="studentsOnly || approvedOrRejected" formControlName="academicYear" fullWidth id="academicYear" nbInput placeholder="" type="text">
 
-                    <ng-container *ngIf="schoolVerificationDetailsForm.academicYear.touched && schoolVerificationDetailsForm.academicYear.invalid">
-
+                    <ng-container *ngIf="schoolVerificationDetailsForm.academicYear.touched && schoolVerificationDetailsForm.academicYear.invalid && !studentsOnly ||
+                   (submitted && schoolVerificationDetailsForm.academicYear.invalid)">
+                      <p class="caption status-danger" *ngIf="schoolVerificationDetailsForm.academicYear.errors.continuing">
+                        Academic Year is Required!
+                      </p>
+                      <p *ngIf="schoolVerificationDetailsForm.academicYear.errors.pattern" class="caption status-danger">
+                        Not a valid number!
+                      </p>
                       <p *ngIf="schoolVerificationDetailsForm.academicYear.errors.min" class="caption status-danger">
                        Academic Year must be a positive number!
                       </p>
-                      <p *ngIf="schoolVerificationDetailsForm.academicYear.errors.max" class="caption status-danger">
-                        Maximum Academic Year is 8!
-                      </p>
+
 
                     </ng-container>
                   </div>
                   <div class="form-group">
                     <label class="label" for="position">Position in Class or Form</label>
-                    <input formControlName="position" fullWidth id="position" nbInput placeholder="" type="number">
+                    <input [attr.disabled]="studentsOnly || approvedOrRejected" formControlName="position" fullWidth id="position" nbInput placeholder="" type="text">
+                    <ng-container *ngIf="schoolVerificationDetailsForm.position.touched && schoolVerificationDetailsForm.position.invalid && !studentsOnly ||
+                   (submitted && schoolVerificationDetailsForm.position.invalid)">
+                      <p class="caption status-danger" *ngIf="schoolVerificationDetailsForm.position.errors.continuing">
+                        Position is Required!
+                      </p>
+
+                      <p *ngIf="schoolVerificationDetailsForm.academicYear.errors.min" class="caption status-danger">
+                        Position must be a positive number!
+                      </p>
+                    </ng-container>
                   </div>
                   <div class="form-group">
                     <p class="label">Grade</p>
-                    <nb-select formControlName="schoolGrade" id="schoolGrade">
+                    <nb-select [disabled]="studentsOnly || approvedOrRejected" formControlName="schoolGrade" id="schoolGrade">
                       <nb-option  *ngFor="let grade of schoolGrades" [value]="grade.key">
                         {{grade.value}}
                       </nb-option>
                     </nb-select>
+                    <ng-container *ngIf="schoolVerificationDetailsForm.schoolGrade.touched && schoolVerificationDetailsForm.schoolGrade.invalid && !studentsOnly ||
+                   (submitted && schoolVerificationDetailsForm.schoolGrade.invalid)">
+                      <p class="caption status-danger" *ngIf="schoolVerificationDetailsForm.schoolGrade.errors.continuing">
+                        Grade is Required!
+                      </p>
+                    </ng-container>
                   </div>
-                  <ng-container *ngIf="user.userType === 'Principal'">
+                  <ng-container *ngIf="userType === 'PRINCIPAL' && joiningSecondaryOrContinuing === 'CONTINUING'">
                     <div class="form-group">
-                      <label class="label" for="principalsComment">Principal's Comment</label>
-                      <input formControlName="principalComment" fullWidth id="principalsComment" nbInput placeholder="Principal's Comment" type="text">
+                      <label class="label" ngxMarkAsterisk for="principalsComment">Principal's Comment</label>
+                      <textarea [disabled]="!(studentsOnly && userType === 'PRINCIPAL')" formControlName="principalComment" fullWidth id="principalsComment" nbInput placeholder="Principal's Comment" type="text"></textarea>
                     </div>
-                    <ng-container *ngIf="schoolVerificationDetailsForm.principalComment.touched && schoolVerificationDetailsForm.principalComment.invalid">
+                    <ng-container *ngIf="schoolVerificationDetailsForm.principalComment.touched && schoolVerificationDetailsForm.principalComment.invalid ||
+                   (submitted && schoolVerificationDetailsForm.principalComment.invalid)">
                       <p *ngIf="schoolVerificationDetailsForm.principalComment.errors" class="caption status-danger">
                         The Principal's Comment for a continuing student is required!
                       </p>
@@ -255,23 +409,78 @@
             </nb-card-body>
           </nb-card>
 
-          <nb-card *ngIf="user.userType === 'Ward Administrator'">
+
+          <nb-card *ngIf="userType == 'EDUCATION_OFFICIAL' || userType =='WARD_ADMINISTRATOR'">
             <nb-card-header>
-              Ward Administrator Details
+              Final Committee Declaration
             </nb-card-header>
+
             <nb-card-body>
-             <form [formGroup]="wardAdministratorForm">
-               <div class="form-group">
-                 <label class="label" for="familyStatusComment">Family Status Comment</label>
-                 <input formControlName="familyStatusComment" fullWidth id="familyStatusComment" nbInput placeholder="" type="text">
-               </div>
-             </form>
+              <form [formGroup]="finalCommitteeDeclarationDetails">
+                <ng-container *ngIf="userType == 'EDUCATION_OFFICIAL'">
+                  <div class="form-group">
+                    <nb-radio-group id="isApproved" formControlName="isApproved">
+                      <nb-radio
+                        [value]="true">
+                        Approved
+                      </nb-radio>
+                      <nb-radio [value]="false">
+                        Rejected
+                      </nb-radio>
+                    </nb-radio-group>
+                    <ng-container *ngIf="finalCommitteeDeclarationDetailsForm.isApproved.touched && finalCommitteeDeclarationDetailsForm.isApproved.invalid ||
+                   (submitted && finalCommitteeDeclarationDetailsForm.isApproved.invalid)">
+                      <p *ngIf="finalCommitteeDeclarationDetailsForm.isApproved.errors.required" class="caption status-danger">
+                       Specify the application status!
+                      </p>
+
+                    </ng-container>
+                  </div>
+                  <div class="form-group">
+                    <label class="label" for="reasons">Reasons For Approving or Rejecting</label>
+                    <textarea formControlName="reasons" fullWidth id="reasons" nbInput placeholder="" type="text"></textarea>
+                    <ng-container *ngIf="finalCommitteeDeclarationDetailsForm.reasons.touched && finalCommitteeDeclarationDetailsForm.reasons.invalid  ||
+                   (submitted && finalCommitteeDeclarationDetailsForm.reasons.invalid)">
+                      <p *ngIf="finalCommitteeDeclarationDetailsForm.reasons.errors" class="caption status-danger">
+                        Reason for approving or rejecting the bursary application is required!
+                      </p>
+
+                    </ng-container>
+                  </div>
+                  <div class="form-group">
+                    <label class="label" for="bursaryAwarded">Bursary Awarded</label>
+                    <input formControlName="bursaryAwarded" fullWidth id="bursaryAwarded" nbInput placeholder="" type="text">
+                    <ng-container *ngIf="finalCommitteeDeclarationDetailsForm.bursaryAwarded.touched && finalCommitteeDeclarationDetailsForm.bursaryAwarded.invalid ||
+                   (submitted && finalCommitteeDeclarationDetailsForm.bursaryAwarded.invalid)">
+                      <p *ngIf="finalCommitteeDeclarationDetailsForm.bursaryAwarded.errors.required" class="caption status-danger">
+                        Amount awarded must be specified!
+                      </p>
+                      <p *ngIf="finalCommitteeDeclarationDetailsForm.bursaryAwarded.errors.pattern" class="caption status-danger">
+                        Not a valid number. Should be positive!
+                      </p>
+                    </ng-container>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="userType =='WARD_ADMINISTRATOR'">
+                  <div class="form-group">
+                    <label class="label" for="familyStatusComment">Family Status Comment</label>
+                    <textarea formControlName="familyStatusComment" fullWidth id="familyStatusComment" nbInput placeholder="" type="text"></textarea>
+                    <ng-container *ngIf="finalCommitteeDeclarationDetailsForm.familyStatusComment.touched && finalCommitteeDeclarationDetailsForm.familyStatusComment.invalid ||
+                   (submitted && finalCommitteeDeclarationDetailsForm.familyStatusComment.invalid)">
+                      <p *ngIf="finalCommitteeDeclarationDetailsForm.familyStatusComment.errors" class="caption status-danger">
+                        Family Status Comment must be specified!
+                      </p>
+
+                    </ng-container>
+                  </div>
+                </ng-container>
+              </form>
             </nb-card-body>
           </nb-card>
 
           <div class="row">
             <div class="col-md-12 col-lg-6 col-xxxl-6">
-              <nb-card class="list-card" size="small">
+              <nb-card *ngIf="false" class="list-card" size="small">
                 <nb-card-header>Documents</nb-card-header>
                 <nb-list>
                   <nb-list-item  *ngFor="let document of this.application.documents" class="d-flex flex-column">
@@ -296,15 +505,13 @@
                 <div class="validation-checkboxes">
                   <nb-checkbox formControlName="studentDeclaration" status="success">I declare this is true</nb-checkbox>
                 </div>
-                <button [disabled]="studentDeclaration.invalid ||
-                studentDetails.invalid || schoolDetails.invalid || familyDetails.invalid || joiningSecondaryDetails.invalid ||
-                schoolVerificationDetails.invalid || schoolVerificationDetails.invalid" nbButton status="primary" >Submit</button>
+<!--                <button [attr.disabled]="studentDeclaration.invalid ||-->
+<!--                studentDetails.invalid || schoolDetails.invalid || familyDetails.invalid || joiningSecondaryDetails.invalid ||-->
+<!--                schoolVerificationDetails.invalid || schoolVerificationDetails.invalid" nbButton status="primary" >Update</button>-->
+                <button nbButton status="primary">Update</button>
               </form>
             </nb-card-body>
           </nb-card>
-
-
-<!--<button class="btn-dark" (click)="populateWithDummy()" >Populate</button>-->
         </nb-card-body>
       </nb-card>
     </div>

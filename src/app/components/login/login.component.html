@@ -33,10 +33,10 @@
            [required]="true"
            [attr.aria-invalid]="loginFormControls.email.invalid && loginFormControls.email.touched ? true : null">
     <ng-container *ngIf="loginFormControls.email.invalid && loginFormControls.email.touched">
-      <p class="caption status-danger" *ngIf="loginFormControls.email.errors?.required">
+      <p class="caption status-danger" *ngIf="loginFormControls.email.errors.required">
         Email is required!
       </p>
-      <p class="caption status-danger" *ngIf="loginFormControls.email.errors?.pattern">
+      <p class="caption status-danger" *ngIf="loginFormControls.email.errors.pattern">
         Email should be the real one!
       </p>
     </ng-container>

@@ -7,4 +7,5 @@ export enum Users {
   USER= 'User',
   SCHOOL= 'School',
   PRINCIPAL = 'Principal',
+  EDUCATION_OFFICIAL = 'Education Official',
 }

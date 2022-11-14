@@ -6,6 +6,7 @@ import {Student} from './student.model';
 import {ApplicationStatus} from '../enums/application-status.enum';
 import {WardAdministrator} from './ward-administrator.model';
 import {Document} from './document.model';
+import {StudentRelation} from './student-relation.model';
 
 export class Application {
   public id: number; // all
@@ -19,6 +20,7 @@ export class Application {
   public schoolVerification: SchoolVerification; // student, principal
   public finalCommitteeDeclaration: FinalCommitteeDeclaration; // not needed
   public documents: Document[]; // student
+  public studentRelations: StudentRelation[]; // Personal bado
  // all, default 0 !PENDING
   // public wardAdministrator: WardAdministrator; // ward_administrator
   public reasons: string;

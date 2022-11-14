@@ -23,6 +23,10 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'Register',
     link: '/register',
   },
+  {
+    title: 'Reports',
+    link: '/reports',
+  },
   // {
   //   title: 'IoT Dashboard',
   //   icon: 'home-outline',

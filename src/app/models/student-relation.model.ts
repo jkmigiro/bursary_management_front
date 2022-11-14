@@ -2,6 +2,7 @@ import {User} from './user.model';
 import {FamilyStatus} from '../enums/family-status.enum';
 import {UserRelation} from '../enums/user-relation.enum';
 import {Student} from './student.model';
+import {Application} from './application.model';
 
 export class StudentRelation {
   public id: number;
@@ -14,4 +15,5 @@ export class StudentRelation {
   public grossIncomePerYear: number = null;
   public telephone: string;
   public userRelation: UserRelation;
+  public application: Application;
 }

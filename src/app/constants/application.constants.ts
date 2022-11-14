@@ -331,6 +331,20 @@ export class ApplicationConstants {
       value: 'Manager',
     },
   ];
+  static APPLICATION_STATUS = [
+    {
+      key: 'APPROVED',
+      value: 'Approved',
+    },
+    {
+      key: 'REJECTED',
+      value: 'Rejected',
+    },
+    {
+      key: 'PENDING',
+      value: 'Pending',
+    },
+  ];
   static SCHOOL_STATUS = [
     {
       key: 'NATIONAL',
@@ -405,6 +419,10 @@ export class ApplicationConstants {
     {
       key: 'EDUCATION_OFFICIAL',
       value: 'Education Official',
+    },
+    {
+      key: 'PRINCIPAL',
+      value: 'Principal',
     },
   ];
 

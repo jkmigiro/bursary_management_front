@@ -11,6 +11,7 @@ import {ProfileComponent} from '../components/profile/profile.component';
 import {AboutComponent} from '../components/about/about.component';
 import {MyApplicationsComponent} from '../components/my-applications/my-applications.component';
 import {AppDetailsComponent} from '../components/application-details/app-details/app-details.component';
+import {ReportsComponent} from '../components/reports/reports.component';
 
 const routes: Routes = [{
   path: '',
@@ -27,6 +28,10 @@ const routes: Routes = [{
     {
       path: 'apply',
       component: ApplicationComponent,
+    },
+    {
+      path: 'reports',
+      component: ReportsComponent,
     },
     {
       path: 'applications',
